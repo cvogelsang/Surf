@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>WAVESOUT - South Africa Rights Map</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+        }
+        .leaflet-popup-content-header {
+            font-weight: bold;
+            font-size: 14px;
+            color: #111;
+            margin-bottom: 4px;
+        }
+        .leaflet-popup-content-sub {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // 1. Karte initialisieren (Zentriert auf die Küste Südafrikas)
+        const map = L.map('map', {
+            zoomControl: false,
+            maxBounds: [[-36, 15], [-26, 34]], // Begrenzt das Scrollen auf die Küstenregionen SA
+            minZoom: 5
+        }).setView([-32.0, 26.0], 6);
+
+        // 2. Cleane Kartenschicht laden (CartoDB Positron)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+        }).addTo(map);
+
+        // 3. Maximierte Datenbank südafrikanischer Right-Hander Spots
+        const spots = [
+            // Region: Jeffreys Bay (Das Epizentrum)
+            { name: "Supertubes (J-Bay)", reg: "Jeffreys Bay", lat: -34.0205, lng: 24.9330 },
+            { name: "Boneyards (J-Bay)", reg: "Jeffreys Bay", lat: -34.0190, lng: 24.9310 },
+            { name: "The Point (J-Bay)", reg: "Jeffreys Bay", lat: -34.0280, lng: 24.9280 },
+            { name: "Tubes (J-Bay)", reg: "Jeffreys Bay", lat: -34.0245, lng: 24.9295 },
+            { name: "Kitchen Windows (J-Bay)", reg: "Jeffreys Bay", lat: -34.0410, lng: 24.9210 },
+            { name: "Albatross (J-Bay)", reg: "Jeffreys Bay", lat: -34.0110, lng: 24.9380 },
+            { name: "Magnatubes (J-Bay)", reg: "Jeffreys Bay", lat: -34.0160, lng: 24.9340 },
+            { name: "Coins (J-Bay)", reg: "Jeffreys Bay", lat: -34.0260, lng: 24.9290 },
+
+            // Region: Cape St. Francis & St. Francis Bay
+            { name: "Bruce's Beauties", reg: "Cape St. Francis", lat: -34.1742, lng: 24.8351 },
+            { name: "Seal Point", reg: "Cape St. Francis", lat: -34.1985, lng: 24.8340 },
+            { name: "Hulett's Reef", reg: "St. Francis Bay", lat: -34.1710, lng: 24.8310 },
+
+            // Region: Durban & KwaZulu-Natal (KZN) North & South Coast
+            { name: "Cave Rock", reg: "Durban Bluff", lat: -29.8784, lng: 31.0621 },
+            { name: "New Pier", reg: "Durban Golden Mile", lat: -29.8515, lng: 31.0392 },
+            { name: "North Beach", reg: "Durban", lat: -29.8490, lng: 31.0365 },
+            { name: "Bay of Plenty", reg: "Durban", lat: -29.8465, lng: 31.0348 },
+            { name: "Scottburgh", reg: "KZN South Coast", lat: -30.2862, lng: 30.7614 },
+            { name: "Green Point (KZN)", reg: "KZN South Coast", lat: -30.2510, lng: 30.7812 },
+            { name: "Ballito (Willard Beach)", reg: "Dolphin Coast", lat: -29.5312, lng: 31.2224 },
+            { name: "St. Michael's on Sea", reg: "KZN South Coast", lat: -30.8124, lng: 30.4112 },
+            { name: "Umdloti Right", reg: "KZN North Coast", lat: -29.6685, lng: 31.1192 },
+            { name: "Warner Beach (Baggies)", reg: "KZN South Coast", lat: -30.0880, lng: 30.8875 },
+            { name: "Zinkwazi Right", reg: "KZN North Coast", lat: -29.2810, lng: 31.4420 },
+            { name: "Southbroom Right", reg: "KZN South Coast", lat: -30.9180, lng: 30.3240 },
+            { name: "Trafalgar Right", reg: "KZN South Coast", lat: -30.9610, lng: 30.2980 },
+            { name: "Ansteys Rights", reg: "Durban Bluff", lat: -29.9120, lng: 31.0210 },
+
+            // Region: Garden Route & Sunshine Coast
+            { name: "Victoria Bay (Vic Bay)", reg: "Garden Route", lat: -34.0042, lng: 22.5482 },
+            { name: "Port Alfred (East Pier)", reg: "Sunshine Coast", lat: -33.6015, lng: 26.8942 },
+            { name: "Wilderness (Leentjiesklip)", reg: "Garden Route", lat: -33.9980, lng: 22.5920 },
+            { name: "Herolds Bay Right", reg: "Garden Route", lat: -34.0515, lng: 22.3884 },
+            { name: "Plettenberg Bay (The Wedge)", reg: "Garden Route", lat: -34.0580, lng: 23.3765 },
+            { name: "Mossel Bay (Outer Pool)", reg: "Garden Route", lat: -34.1720, lng: 22.1480 },
+            { name: "Mossel Bay (Inner Pool)", reg: "Garden Route", lat: -34.1750, lng: 22.1460 },
+            { name: "Kenton-on-Sea", reg: "Sunshine Coast", lat: -33.6880, lng: 26.6710 },
+
+            // Region: Wild Coast (Ostkap / Transkei) - Extrem unberührt
+            { name: "Ntlonyana Right", reg: "Wild Coast", lat: -32.2840, lng: 28.9120 },
+            { name: "Preslies Bay", reg: "Wild Coast", lat: -31.8845, lng: 29.2140 },
+            { name: "Mdumbi Rights", reg: "Wild Coast", lat: -31.9340, lng: 29.1240 },
+            { name: "Port St. Johns (Second Beach)", reg: "Wild Coast", lat: -31.6360, lng: 29.5440 },
+            { name: "Coffee Bay Right", reg: "Wild Coast", lat: -31.9840, lng: 29.1480 },
+            { name: "Sharpley's Point", reg: "Wild Coast", lat: -32.6120, lng: 28.4410 },
+            { name: "Mazeppa Bay Right", reg: "Wild Coast", lat: -32.4820, lng: 28.6480 },
+
+            // Region: Port Elizabeth (Gqeberha) Area
+            { name: "Millers Point (PE)", reg: "Port Elizabeth", lat: -34.0440, lng: 25.6610 },
+            { name: "Fence (PE)", reg: "Port Elizabeth", lat: -34.0380, lng: 25.6690 },
+            { name: "Something Good Right", reg: "Port Elizabeth", lat: -33.9850, lng: 25.6640 },
+            { name: "Flat Rocks", reg: "Port Elizabeth", lat: -34.0120, lng: 25.6740 },
+
+            // Region: East London Area
+            { name: "Nahoon Reef", reg: "East London", lat: -32.9985, lng: 27.9510 },
+            { name: "Queensbury Bay", reg: "East London (North)", lat: -32.8940, lng: 28.0620 },
+            { name: "Glen Eden Right", reg: "East London", lat: -32.8680, lng: 28.1140 },
+            { name: "Yellow Sands Right", reg: "East London", lat: -32.9120, lng: 28.0410 },
+            { name: "Cintsa Right", reg: "East London", lat: -32.8240, lng: 28.1610 },
+
+            // Region: Cape Town & Overberg (Kaltwasser, Massive Power)
+            { name: "Dungeons (Big Wave)", reg: "Hout Bay", lat: -34.0585, lng: 18.3032 },
+            { name: "Koeel Bay (Caves)", reg: "Overberg Coast", lat: -34.2340, lng: 18.8410 },
+            { name: "Crayfish Factory", reg: "Cape Peninsula", lat: -34.1840, lng: 18.3340 },
+            { name: "Muizenberg (The Corner Right)", reg: "False Bay", lat: -34.1110, lng: 18.4720 },
+            { name: "Bikini Beach Right", reg: "Gordon's Bay", lat: -34.1645, lng: 18.8590 },
+            { name: "Betty's Bay Right", reg: "Overberg Coast", lat: -34.3680, lng: 18.8940 },
+            { name: "Hermanus (Bayview)", reg: "Overberg Coast", lat: -34.4120, lng: 19.2440 },
+            { name: "Struisbaai Right", reg: "Agulhas Area", lat: -34.8010, lng: 20.0540 },
+            { name: "Arniston Right", reg: "Overberg Coast", lat: -34.6640, lng: 20.2310 },
+            { name: "Kalk Bay (Right Peak)", reg: "False Bay", lat: -34.1280, lng: 18.4490 },
+
+            // West Coast (Einsam, Kalt, Industrie/Natur-Mix)
+            { name: "Elands Bay (Right Corner)", reg: "West Coast", lat: -32.3142, lng: 18.3241 },
+            { name: "Paternoster Right", reg: "West Coast", lat: -32.8040, lng: 17.8810 },
+            { name: "Lambert's Bay Right", reg: "West Coast", lat: -32.0880, lng: 18.3010 },
+            { name: "Saldanha Bay Point", reg: "West Coast", lat: -33.0140, lng: 17.9420 }
+        ];
+
+        // 4. Pins automatisiert auf der App-Karte rendern
+        spots.forEach(spot => {
+            const popupContent = `
+                <div class="leaflet-popup-content-sub">${spot.reg}</div>
+                <div class="leaflet-popup-content-header">🇿🇦 ${spot.name}</div>
+            `;
+            
+            L.marker([spot.lat, spot.lng])
+                .bindPopup(popupContent, { closeButton: false, offset: L.point(0, -6) })
+                .addTo(map);
+        });
+    </script>
+</body>
+</html>
