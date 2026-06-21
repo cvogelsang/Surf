@@ -125,7 +125,7 @@
             </div>
 
             <div class="text-xs text-slate-600 leading-relaxed bg-slate-50/50 p-3 rounded-xl border border-gray-100">
-                ✈️ <strong>Trip Info:</strong> Flüge nach <span id="detail-airport">---</span> ab <span id="detail-price">---</span> verfügbar. Beste Zeit für Session: <span id="detail-camp">--</span>
+                ✈️ <strong>Trip Info:</strong> Flüge nach <span id="detail-airport">---</span> ab <span id="detail-price">---</span> verfügbar. Beste Zeit für Session: <span id="detail-camp">---</span>
             </div>
 
             <div class="space-y-2 pt-1">
@@ -148,32 +148,32 @@
         // Datenbank mit korrigierten, realistischen Premium-Swells (Perioden angehoben)
         const surfSpots = [
             // EUROPA
-            { id: "ericeira", name: "Ericeira", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.96, lng: -9.42, kontinent: "Europa", campInfo: "Samstag bringt sauberen Nordwest-Swell.", defaultForecast: { fr: "1.9", sa: "2.3", so: "1.5", p: "12" } },
-            { id: "hossegor", name: "Hossegor", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.66, lng: -1.44, kontinent: "Europa", campInfo: "Starker Beachbreak zur Gezeitenwende.", defaultForecast: { fr: "1.4", sa: "1.8", so: "2.1", p: "11" } },
-            { id: "peniche", name: "Peniche", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "119€", lat: 39.34, lng: -9.36, kontinent: "Europa", campInfo: "Supertubos läuft hohl bei Nordwind.", defaultForecast: { fr: "2.0", sa: "2.1", so: "1.7", p: "13" } },
-            { id: "zarautz", name: "Zarautz", sub: "Spanien", flag: "🇪🇸", airport: "BIO", flightPrice: "132€", lat: 43.28, lng: -2.16, kontinent: "Europa", campInfo: "Konstanter, feiner Sandstrand für alle Level.", defaultForecast: { fr: "1.1", sa: "1.4", so: "1.3", p: "10" } },
-            { id: "mundaka", name: "Mundaka", sub: "Spanien", flag: "🇪🇸", airport: "BIO", flightPrice: "132€", lat: 43.40, lng: -2.69, kontinent: "Europa", campInfo: "Perfekte linke Flussmündung. Nur für Pros.", defaultForecast: { fr: "1.2", sa: "1.9", so: "2.4", p: "14" } },
-            { id: "somo", name: "Somo", sub: "Spanien", flag: "🇪🇸", airport: "SDR", flightPrice: "155€", lat: 43.45, lng: -3.74, kontinent: "Europa", campInfo: "Sehr windgeschützt und anfängerfreundlich.", defaultForecast: { fr: "1.3", sa: "1.4", so: "1.2", p: "10" } },
-            { id: "bundoran", name: "Bundoran", sub: "Irland", flag: "🇮🇪", airport: "DUB", flightPrice: "89€", lat: 54.47, lng: -8.28, kontinent: "Europa", campInfo: "Kaltwasser-Paradies mit massiven Riff-Wellen.", defaultForecast: { fr: "2.5", sa: "2.9", so: "2.4", p: "13" } },
-            { id: "fistral", name: "Newquay", sub: "Großbritannien", flag: "🇬🇧", airport: "BRS", flightPrice: "142€", lat: 50.41, lng: -5.09, kontinent: "Europa", campInfo: "Epizentrum der britischen Surfszene.", defaultForecast: { fr: "1.5", sa: "1.6", so: "1.5", p: "11" } },
-            { id: "pantin", name: "Pantín", sub: "Spanien", flag: "🇪🇸", airport: "SCQ", flightPrice: "168€", lat: 43.64, lng: -8.11, kontinent: "Europa", campInfo: "Konstanter Swell-Magnet in Galizien.", defaultForecast: { fr: "2.1", sa: "2.2", so: "2.0", p: "12" } },
-            { id: "nazare", name: "Nazaré", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 39.61, lng: -9.08, kontinent: "Europa", campInfo: "Monster-Wellen im Tiefseekanyon.", defaultForecast: { fr: "3.2", sa: "4.5", so: "3.9", p: "16" } },
+            { id: "ericeira", name: "Ericeira", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.96, lng: -9.42, kontinent: "Europa", campInfo: "Samstag bringt sanfte Wellen", defaultForecast: { sa: 1.8, p: 12 } },
+            { id: "hossegor", name: "Hossegor", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.66, lng: -1.44, kontinent: "Europa", campInfo: "Starker Beachbreak", defaultForecast: { sa: 2.1, p: 13 } },
+            { id: "peniche", name: "Peniche", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "119€", lat: 39.34, lng: -9.36, kontinent: "Europa", campInfo: "Supertubos läuft heiß", defaultForecast: { sa: 2.3, p: 14 } },
+            { id: "zarautz", name: "Zarautz", sub: "Spanien", flag: "🇪🇸", airport: "BIO", flightPrice: "132€", lat: 43.28, lng: -2.16, kontinent: "Europa", campInfo: "Konstanter, feiner Swell", defaultForecast: { sa: 1.9, p: 12 } },
+            { id: "mundaka", name: "Mundaka", sub: "Spanien", flag: "🇪🇸", airport: "BIO", flightPrice: "132€", lat: 43.40, lng: -2.69, kontinent: "Europa", campInfo: "Perfekte linke Flusskante", defaultForecast: { sa: 1.7, p: 11 } },
+            { id: "somo", name: "Somo", sub: "Spanien", flag: "🇪🇸", airport: "SDR", flightPrice: "155€", lat: 43.45, lng: -3.74, kontinent: "Europa", campInfo: "Sehr windgeschützt und anfängerfreundlich", defaultForecast: { sa: 1.5, p: 10 } },
+            { id: "bundoran", name: "Bundoran", sub: "Irland", flag: "🇮🇪", airport: "DUB", flightPrice: "89€", lat: 54.47, lng: -8.28, kontinent: "Europa", campInfo: "Kaltwasser-Paradies", defaultForecast: { sa: 2.0, p: 13 } },
+            { id: "fistral", name: "Newquay", sub: "Großbritannien", flag: "🇬🇧", airport: "BRS", flightPrice: "142€", lat: 50.41, lng: -5.09, kontinent: "Europa", campInfo: "Epizentrum des britischen Surfens", defaultForecast: { sa: 2.2, p: 14 } },
+            { id: "pantin", name: "Pantín", sub: "Spanien", flag: "🇪🇸", airport: "SCQ", flightPrice: "168€", lat: 43.64, lng: -8.11, kontinent: "Europa", campInfo: "Konstanter Swell-Magnet", defaultForecast: { sa: 2.4, p: 15 } },
+            { id: "nazare", name: "Nazaré", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 39.61, lng: -9.08, kontinent: "Europa", campInfo: "Monster-Wellen im Tiefen Norden", defaultForecast: { sa: 3.5, p: 16 } },
             
             // AFRIKA
-            { id: "anchors", name: "Taghazout", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.54, lng: -9.71, kontinent: "Afrika", campInfo: "Endlose rechte Pointbreaks bei Ebbe.", defaultForecast: { fr: "1.8", sa: "2.1", so: "1.9", p: "14" } },
-            { id: "imsouane", name: "Imsouane", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.84, lng: -9.82, kontinent: "Afrika", campInfo: "Die längste Welle Marokkots für Longboards.", defaultForecast: { fr: "1.3", sa: "1.5", so: "1.2", p: "15" } },
-            { id: "jbay", name: "Jeffreys Bay", sub: "Südafrika", flag: "🇿🇦", airport: "PLZ", flightPrice: "670€", lat: -34.02, lng: 24.92, kontinent: "Afrika", campInfo: "Die legendärste rechte Point-Welle der Welt.", defaultForecast: { fr: "2.2", sa: "2.6", so: "2.3", p: "15" } },
-            { id: "dakar", name: "Ngor Right", sub: "Senegal", flag: "🇸🇳", airport: "DSS", flightPrice: "410€", lat: 14.75, lng: -17.51, kontinent: "Afrika", campInfo: "Konstantes Riffkino direkt vor der Insel.", defaultForecast: { fr: "1.5", sa: "1.6", so: "1.4", p: "12" } },
+            { id: "anchors", name: "Taghazout", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.54, lng: -9.71, kontinent: "Afrika", campInfo: "Endlose rechte Points", defaultForecast: { sa: 2.0, p: 12 } },
+            { id: "imsouane", name: "Imsouane", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.84, lng: -9.82, kontinent: "Afrika", campInfo: "Die längste Welle Afrikas", defaultForecast: { sa: 1.8, p: 11 } },
+            { id: "jbay", name: "Jeffreys Bay", sub: "Südafrika", flag: "🇿🇦", airport: "PLZ", flightPrice: "670€", lat: -34.02, lng: 24.92, kontinent: "Afrika", campInfo: "Die legendärs Tubing Machine", defaultForecast: { sa: 2.2, p: 14 } },
+            { id: "dakar", name: "Ngor Right", sub: "Senegal", flag: "🇸🇳", airport: "DSS", flightPrice: "410€", lat: 14.75, lng: -17.51, kontinent: "Afrika", campInfo: "Konstantes Riffkino", defaultForecast: { sa: 1.9, p: 13 } },
 
             // AMERIKA
-            { id: "pipeline", name: "Pipeline", sub: "Hawaii, USA", flag: "🇺🇸", airport: "HNL", flightPrice: "890€", lat: 21.66, lng: -158.05, kontinent: "Amerika", campInfo: "Die hohlste Tube über messerscharfem Riff.", defaultForecast: { fr: "2.4", sa: "3.2", so: "2.9", p: "16" } },
-            { id: "malibu", name: "Malibu", sub: "Kalifornien, USA", flag: "🇺🇸", airport: "LAX", flightPrice: "490€", lat: 34.03, lng: -118.67, kontinent: "Amerika", campInfo: "Klassischer Pointbreak-Traum, oft gut besucht.", defaultForecast: { fr: "1.1", sa: "1.3", so: "1.2", p: "14" } },
-            { id: "chicama", name: "Chicama", sub: "Peru", flag: "🇵🇪", airport: "TRU", flightPrice: "820€", lat: -7.70, lng: -79.43, kontinent: "Amerika", campInfo: "Die längste linke Welle unseres Planeten.", defaultForecast: { fr: "1.6", sa: "2.0", so: "1.7", p: "15" } },
+            { id: "pipeline", name: "Pipeline", sub: "Hawaii, USA", flag: "🇺🇸", airport: "HNL", flightPrice: "890€", lat: 21.66, lng: -158.05, kontinent: "Amerika", campInfo: "Die hohlsten Barrels der Welt", defaultForecast: { sa: 2.8, p: 15 } },
+            { id: "malibu", name: "Malibu", sub: "Kalifornien, USA", flag: "🇺🇸", airport: "LAX", flightPrice: "490€", lat: 34.03, lng: -118.67, kontinent: "Amerika", campInfo: "Klassische lange Rides", defaultForecast: { sa: 1.6, p: 11 } },
+            { id: "chicama", name: "Chicama", sub: "Peru", flag: "🇵🇪", airport: "TRU", flightPrice: "820€", lat: -7.70, lng: -79.43, kontinent: "Amerika", campInfo: "Die längste linke Welle der Welt", defaultForecast: { sa: 2.5, p: 14 } },
 
             // ASIEN
-            { id: "uluwatu", name: "Uluwatu", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.08, kontinent: "Asien", campInfo: "Konstanter Riff-Swell unter epischen Klippen.", defaultForecast: { fr: "2.1", sa: "2.4", so: "2.2", p: "15" } },
-            { id: "padang", name: "Padang Padang", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.10, kontinent: "Asien", campInfo: "Die Pipeline Asiens. Extrem hohl und schnell.", defaultForecast: { fr: "1.8", sa: "2.3", so: "2.1", p: "16" } },
-            { id: "siargao", name: "Cloud 9", sub: "Philippinen", flag: "🇵🇭", airport: "IAO", flightPrice: "880€", lat: 9.81, lng: 126.16, kontinent: "Asien", campInfo: "Heftige Barrels direkt am Boardwalk.", defaultForecast: { fr: "1.4", sa: "1.9", so: "1.6", p: "14" } }
+            { id: "uluwatu", name: "Uluwatu", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.08, kontinent: "Asien", campInfo: "Konstanter Reef Break", defaultForecast: { sa: 2.0, p: 13 } },
+            { id: "padang", name: "Padang Padang", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.10, kontinent: "Asien", campInfo: "Die Pistole von Bali", defaultForecast: { sa: 1.9, p: 12 } },
+            { id: "siargao", name: "Cloud 9", sub: "Philippinen", flag: "🇵🇭", airport: "IAO", flightPrice: "880€", lat: 9.81, lng: 126.16, kontinent: "Asien", campInfo: "Heftige Barrels im Pazifik", defaultForecast: { sa: 2.3, p: 14 } },
         ];
 
         let map;
@@ -186,6 +186,7 @@
             const currentDay = current.getDay();
             
             let distanceToFriday = (5 - currentDay + 7) % 7;
+            // Nur "7 Tage später" wenn KEIN Datum im Kalender ausgewählt wurde
             if (distanceToFriday === 0 && current.getHours() >= 15 && !document.getElementById('date-picker-input').value) {
                 distanceToFriday = 7;
             }
@@ -281,7 +282,7 @@
                 mapMarkers.push(marker);
 
                 container.innerHTML += `
-                    <div onclick="showSpotDetail('${spot.id}')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center cursor-pointer hover:border-blue-400 transition">
+                    <div onclick="showSpotDetail('${spot.id}')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center cursor-pointer hover:border-blue-300 transition">
                         <div>
                             <h3 class="font-bold text-lg text-slate-800">${spot.name}</h3>
                             <p class="text-xs text-gray-400 mt-0.5">${spot.flag} ${spot.sub}</p>
@@ -364,7 +365,7 @@
 
                 try {
                     // JETZT NEU: swell_wave_height & swell_wave_peak_period für echten Groundswell-Match
-                    const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period&start_date=${dates.mo}&end_date=${dates.so}&timezone=auto`;
+                    const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period&start_date=${dates.mo}&end_date=${dates.so}`;
                     const response = await fetch(url);
                     const data = await response.json();
 
