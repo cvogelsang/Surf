@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surf & Fly Weekender</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        .leaflet-control-attribution { display: none !important; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-900 min-h-screen flex flex-col justify-between max-w-md mx-auto shadow-2xl relative">
+
+    <div class="bg-white pt-4 px-4 pb-2 border-b border-gray-100 sticky top-0 z-[1000]">
+        <div class="flex items-center justify-between">
+            <div onclick="showListView()" class="flex items-baseline space-x-1 cursor-pointer select-none active:opacity-70 transition">
+                <h1 class="text-2xl font-black tracking-tight text-slate-800">Surf & Fly</h1>
+                <span class="text-xs font-semibold text-blue-500">Weekender</span>
+            </div>
+            <button onclick="location.reload()" class="text-slate-500 hover:text-blue-500 transition">
+                <i class="fas fa-redo-alt text-lg"></i>
+            </button>
+        </div>
+
+        <div class="flex space-x-2 mt-4 overflow-x-auto no-scrollbar pb-1">
+            <button onclick="filterRegion('Europa')" id="btn-Europa" class="bg-blue-600 text-white font-bold text-sm px-5 py-2 rounded-full transition shadow-sm">Europa</button>
+            <button onclick="filterRegion('Afrika')" id="btn-Afrika" class="bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200">Afrika</button>
+            <button onclick="filterRegion('Amerika')" id="btn-Amerika" class="bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200">Amerika</button>
+            <button onclick="filterRegion('Asien')" id="btn-Asien" class="bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200">Asien</button>
+        </div>
+    </div>
+
+    <div class="relative w-full h-[260px] bg-slate-200 z-10">
+        <div id="map" class="w-full h-full"></div>
+    </div>
+
+    <div class="bg-slate-50 flex-1 px-4 py-6 space-y-4 rounded-t-3xl -mt-6 relative z-20 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+        
+        <div id="spot-list-container" class="space-y-3">
+            
+            <div class="flex items-center space-x-2">
+                <div class="relative flex items-center text-[11px] font-bold text-blue-600 bg-blue-50 border border-blue-100 rounded-xl px-3 py-1.5 hover:bg-blue-100/70 transition">
+                    <i class="far fa-calendar-alt mr-1.5"></i>
+                    <span id="weekend-label-display">Wochenende wählen...</span>
+                    <input type="date" id="date-picker-input" class="absolute inset-0 opacity-0 cursor-pointer">
+                </div>
+
+                <div class="flex items-center text-[11px] font-bold text-slate-600 bg-white border border-gray-200 rounded-xl px-2 py-1.5">
+                    <i class="fas fa-plane-departure mr-1.5 text-gray-400"></i>
+                    <select id="airport-selector" onchange="updateUI()" class="bg-transparent border-none outline-none cursor-pointer pr-1">
+                        <option value="BER">BER</option>
+                        <option value="FRA">FRA</option>
+                        <option value="MUC">MUC</option>
+                        <option value="HAM">HAM</option>
+                        <option value="DUS">DUS</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="climate-warning-banner" class="hidden text-[10px] bg-amber-50 text-amber-800 border border-amber-200 rounded-xl p-2 flex items-center space-x-1.5">
+                <i class="fas fa-info-circle text-amber-500"></i>
+                <span>Datum weit in der Zukunft. Es werden historische Saisondaten berechnet.</span>
+            </div>
+
+            <div id="spot-list-view" class="space-y-3 max-h-[420px] overflow-y-auto no-scrollbar pt-1">
+                </div>
+        </div>
+
+        <div id="spot-detail-view" class="hidden bg-white p-5 rounded-3xl shadow-sm border border-gray-100 space-y-5">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 id="detail-name" class="text-2xl font-bold text-slate-800">--</h2>
+                    <p class="text-xs text-gray-500 mt-1 flex items-center">
+                        <span id="detail-flag" class="mr-1.5">🇵🇹</span> 
+                        <span id="detail-sub">--</span>
+                    </p>
+                </div>
+                <div id="detail-score" class="text-white font-bold text-sm px-3 py-2 rounded-xl flex items-center justify-center">
+                    --%
+                </div>
+            </div>
+
+            <div id="detail-data-source-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-lg inline-block"></div>
+
+            <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-2 -mx-1 px-1">
+                <div id="card-MO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+                    <p id="label-mo" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">MO</p>
+                    <p id="wave-mo" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+                    <p id="period-mo" class="text-[10px] text-gray-500">--</p>
+                </div>
+                <div id="card-DI" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+                    <p id="label-di" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">DI</p>
+                    <p id="wave-di" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+                    <p id="period-di" class="text-[10px] text-gray-500">--</p>
+                </div>
+                <div id="card-MI" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+                    <p id="label-mi" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">MI</p>
+                    <p id="wave-mi" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+                    <p id="period-mi" class="text-[10px] text-gray-500">--</p>
+                </div>
+                <div id="card-DO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+                    <p id="label-do" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">DO</p>
+                    <p id="wave-do" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+                    <p id="period-do" class="text-[10px] text-gray-500">--</p>
+                </div>
+                <div id="card-FR" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+                    <p id="label-fr" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">FR</p>
+                    <p id="wave-fr" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+                    <p id="period-fr" class="text-[10px] text-gray-500">--</p>
+                </div>
+                <div id="card-SA" class="bg-blue-50 border-2 border-blue-500 rounded-2xl p-2.5 text-center min-w-[75px] flex-shrink-0 shadow-sm shadow-blue-50">
+                    <p id="label-sa" class="text-[9px] uppercase font-bold text-blue-500 tracking-wider">SA</p>
+                    <p id="wave-sa" class="text-sm font-black text-blue-900 mt-0.5">--</p>
+                    <p id="period-sa" class="text-[10px] text-blue-600 font-medium">--</p>
+                </div>
+                <div id="card-SO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+                    <p id="label-so" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">SO</p>
+                    <p id="wave-so" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+                    <p id="period-so" class="text-[10px] text-gray-500">--</p>
+                </div>
+            </div>
+
+            <div class="text-xs text-slate-600 leading-relaxed bg-slate-50/50 p-3 rounded-xl border border-gray-100">
+                ✈️ <strong>Trip Info:</strong> Flüge nach <span id="detail-airport">---</span> ab <span id="detail-price">---</span> verfügbar. Beste Zeit für Session: <span id="detail-camp">--</span>
+            </div>
+
+            <div class="space-y-2 pt-1">
+                <button id="flight-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-2xl transition shadow-md flex items-center justify-center text-sm">
+                    <span>Flüge & Mietwagen prüfen</span>
+                </button>
+                <button onclick="alert('Swell Alert aktiviert!')" class="w-full bg-white text-blue-600 font-bold py-3.5 px-4 rounded-2xl transition border-2 border-blue-600 text-sm">
+                    Swell Alert
+                </button>
+                <button onclick="showListView()" class="w-full text-center text-xs text-gray-400 pt-2 hover:text-slate-600 transition">
+                    <i class="fas fa-chevron-left mr-1"></i> Zurück zur Übersicht
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Datenbank mit korrigierten, realistischen Premium-Swells (Perioden angehoben)
+        const surfSpots = [
+            // EUROPA
+            { id: "ericeira", name: "Ericeira", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.96, lng: -9.42, kontinent: "Europa", campInfo: "Samstag bringt sauberen Nordwest-Swell.", defaultForecast: { fr: "1.9", sa: "2.3", so: "1.5", p: "12" } },
+            { id: "hossegor", name: "Hossegor", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.66, lng: -1.44, kontinent: "Europa", campInfo: "Starker Beachbreak zur Gezeitenwende.", defaultForecast: { fr: "1.4", sa: "1.8", so: "2.1", p: "11" } },
+            { id: "peniche", name: "Peniche", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "119€", lat: 39.34, lng: -9.36, kontinent: "Europa", campInfo: "Supertubos läuft hohl bei Nordwind.", defaultForecast: { fr: "2.0", sa: "2.1", so: "1.7", p: "13" } },
+            { id: "zarautz", name: "Zarautz", sub: "Spanien", flag: "🇪🇸", airport: "BIO", flightPrice: "132€", lat: 43.28, lng: -2.16, kontinent: "Europa", campInfo: "Konstanter, feiner Sandstrand für alle Level.", defaultForecast: { fr: "1.1", sa: "1.4", so: "1.3", p: "10" } },
+            { id: "mundaka", name: "Mundaka", sub: "Spanien", flag: "🇪🇸", airport: "BIO", flightPrice: "132€", lat: 43.40, lng: -2.69, kontinent: "Europa", campInfo: "Perfekte linke Flussmündung. Nur für Pros.", defaultForecast: { fr: "1.2", sa: "1.9", so: "2.4", p: "14" } },
+            { id: "somo", name: "Somo", sub: "Spanien", flag: "🇪🇸", airport: "SDR", flightPrice: "155€", lat: 43.45, lng: -3.74, kontinent: "Europa", campInfo: "Sehr windgeschützt und anfängerfreundlich.", defaultForecast: { fr: "1.3", sa: "1.4", so: "1.2", p: "10" } },
+            { id: "bundoran", name: "Bundoran", sub: "Irland", flag: "🇮🇪", airport: "DUB", flightPrice: "89€", lat: 54.47, lng: -8.28, kontinent: "Europa", campInfo: "Kaltwasser-Paradies mit massiven Riff-Wellen.", defaultForecast: { fr: "2.5", sa: "2.9", so: "2.4", p: "13" } },
+            { id: "fistral", name: "Newquay", sub: "Großbritannien", flag: "🇬🇧", airport: "BRS", flightPrice: "142€", lat: 50.41, lng: -5.09, kontinent: "Europa", campInfo: "Epizentrum der britischen Surfszene.", defaultForecast: { fr: "1.5", sa: "1.6", so: "1.5", p: "11" } },
+            { id: "pantin", name: "Pantín", sub: "Spanien", flag: "🇪🇸", airport: "SCQ", flightPrice: "168€", lat: 43.64, lng: -8.11, kontinent: "Europa", campInfo: "Konstanter Swell-Magnet in Galizien.", defaultForecast: { fr: "2.1", sa: "2.2", so: "2.0", p: "12" } },
+            { id: "nazare", name: "Nazaré", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 39.61, lng: -9.08, kontinent: "Europa", campInfo: "Monster-Wellen im Tiefseekanyon.", defaultForecast: { fr: "3.2", sa: "4.5", so: "3.9", p: "16" } },
+            
+            // AFRIKA
+            { id: "anchors", name: "Taghazout", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.54, lng: -9.71, kontinent: "Afrika", campInfo: "Endlose rechte Pointbreaks bei Ebbe.", defaultForecast: { fr: "1.8", sa: "2.1", so: "1.9", p: "14" } },
+            { id: "imsouane", name: "Imsouane", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.84, lng: -9.82, kontinent: "Afrika", campInfo: "Die längste Welle Marokkots für Longboards.", defaultForecast: { fr: "1.3", sa: "1.5", so: "1.2", p: "15" } },
+            { id: "jbay", name: "Jeffreys Bay", sub: "Südafrika", flag: "🇿🇦", airport: "PLZ", flightPrice: "670€", lat: -34.02, lng: 24.92, kontinent: "Afrika", campInfo: "Die legendärste rechte Point-Welle der Welt.", defaultForecast: { fr: "2.2", sa: "2.6", so: "2.3", p: "15" } },
+            { id: "dakar", name: "Ngor Right", sub: "Senegal", flag: "🇸🇳", airport: "DSS", flightPrice: "410€", lat: 14.75, lng: -17.51, kontinent: "Afrika", campInfo: "Konstantes Riffkino direkt vor der Insel.", defaultForecast: { fr: "1.5", sa: "1.6", so: "1.4", p: "12" } },
+
+            // AMERIKA
+            { id: "pipeline", name: "Pipeline", sub: "Hawaii, USA", flag: "🇺🇸", airport: "HNL", flightPrice: "890€", lat: 21.66, lng: -158.05, kontinent: "Amerika", campInfo: "Die hohlste Tube über messerscharfem Riff.", defaultForecast: { fr: "2.4", sa: "3.2", so: "2.9", p: "16" } },
+            { id: "malibu", name: "Malibu", sub: "Kalifornien, USA", flag: "🇺🇸", airport: "LAX", flightPrice: "490€", lat: 34.03, lng: -118.67, kontinent: "Amerika", campInfo: "Klassischer Pointbreak-Traum, oft gut besucht.", defaultForecast: { fr: "1.1", sa: "1.3", so: "1.2", p: "14" } },
+            { id: "chicama", name: "Chicama", sub: "Peru", flag: "🇵🇪", airport: "TRU", flightPrice: "820€", lat: -7.70, lng: -79.43, kontinent: "Amerika", campInfo: "Die längste linke Welle unseres Planeten.", defaultForecast: { fr: "1.6", sa: "2.0", so: "1.7", p: "15" } },
+
+            // ASIEN
+            { id: "uluwatu", name: "Uluwatu", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.08, kontinent: "Asien", campInfo: "Konstanter Riff-Swell unter epischen Klippen.", defaultForecast: { fr: "2.1", sa: "2.4", so: "2.2", p: "15" } },
+            { id: "padang", name: "Padang Padang", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.10, kontinent: "Asien", campInfo: "Die Pipeline Asiens. Extrem hohl und schnell.", defaultForecast: { fr: "1.8", sa: "2.3", so: "2.1", p: "16" } },
+            { id: "siargao", name: "Cloud 9", sub: "Philippinen", flag: "🇵🇭", airport: "IAO", flightPrice: "880€", lat: 9.81, lng: 126.16, kontinent: "Asien", campInfo: "Heftige Barrels direkt am Boardwalk.", defaultForecast: { fr: "1.4", sa: "1.9", so: "1.6", p: "14" } }
+        ];
+
+        let map;
+        let mapMarkers = [];
+        let currentRegion = "Europa";
+        let baseAnchorDate = new Date(); // 2026
+
+        function getCalculatedWeekDays() {
+            const current = new Date(baseAnchorDate);
+            const currentDay = current.getDay();
+            
+            let distanceToFriday = (5 - currentDay + 7) % 7;
+            if (distanceToFriday === 0 && current.getHours() >= 15 && !document.getElementById('date-picker-input').value) {
+                distanceToFriday = 7;
+            }
+            
+            const fridayDate = new Date(current);
+            fridayDate.setDate(current.getDate() + distanceToFriday);
+
+            const weekDates = {};
+            const labels = ["mo", "di", "mi", "do", "fr", "sa", "so"];
+            
+            for(let i = -4; i <= 2; i++) {
+                const d = new Date(fridayDate);
+                d.setDate(fridayDate.getDate() + i);
+                const dayLabel = labels[(d.getDay() + 6) % 7];
+                weekDates[dayLabel] = d.toISOString().split('T')[0];
+                weekDates[dayLabel + "Lbl"] = d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+            }
+            return weekDates;
+        }
+
+        function isFutureClimateMode() {
+            const dates = getCalculatedWeekDays();
+            const saDate = new Date(dates.sa);
+            const today = new Date();
+            const diffTime = Math.abs(saDate - today);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays > 11;
+        }
+
+        function calculateDynamicScore(waveHeight) {
+            let height = parseFloat(waveHeight);
+            if (isNaN(height)) height = 1.5;
+            if (height >= 2.5) return 95;
+            if (height >= 1.8) return 85;
+            if (height >= 1.2) return 68;
+            return 45;
+        }
+
+        function initMap() {
+            map = L.map('map', { zoomControl: false }).setView([41.5, -5.5], 5);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+            
+            document.getElementById('date-picker-input').addEventListener('change', (e) => {
+                if (e.target.value) {
+                    baseAnchorDate = new Date(e.target.value);
+                    updateUI();
+                }
+            });
+
+            updateUI();
+        }
+
+        function updateUI() {
+            const dates = getCalculatedWeekDays();
+            document.getElementById('weekend-label-display').innerText = `WE: ${dates.frLbl} bis ${dates.soLbl}`;
+
+            const banner = document.getElementById('climate-warning-banner');
+            if (isFutureClimateMode()) banner.classList.remove('hidden');
+            else banner.classList.add('hidden');
+
+            ["Europa", "Afrika", "Amerika", "Asien"].forEach(reg => {
+                const btn = document.getElementById(`btn-${reg}`);
+                if(btn) {
+                    btn.className = reg === currentRegion 
+                        ? "bg-blue-600 text-white font-bold text-sm px-5 py-2 rounded-full transition shadow-sm" 
+                        : "bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200";
+                }
+            });
+
+            mapMarkers.forEach(m => map.removeLayer(m));
+            mapMarkers = [];
+
+            const container = document.getElementById('spot-list-view');
+            container.innerHTML = '';
+
+            const filtered = surfSpots.filter(s => s.kontinent === currentRegion);
+
+            filtered.forEach(spot => {
+                const waveH = spot.defaultForecast.sa;
+                const dynamicScore = calculateDynamicScore(waveH);
+
+                const markerColor = dynamicScore >= 80 ? "#22c55e" : (dynamicScore >= 60 ? "#f97316" : "#ef4444");
+                const bgScoreClass = dynamicScore >= 80 ? "bg-green-500" : (dynamicScore >= 60 ? "bg-orange-500" : "bg-red-500");
+                
+                const customIcon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="background-color: ${markerColor}; width: 14px; height: 14px; border-radius: 50%; border: 2.5px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></div>`,
+                    iconSize: [14, 14]
+                });
+
+                const marker = L.marker([spot.lat, spot.lng], { icon: customIcon }).addTo(map);
+                marker.on('click', () => showSpotDetail(spot.id));
+                mapMarkers.push(marker);
+
+                container.innerHTML += `
+                    <div onclick="showSpotDetail('${spot.id}')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center cursor-pointer hover:border-blue-400 transition">
+                        <div>
+                            <h3 class="font-bold text-lg text-slate-800">${spot.name}</h3>
+                            <p class="text-xs text-gray-400 mt-0.5">${spot.flag} ${spot.sub}</p>
+                        </div>
+                        <div class="${bgScoreClass} text-white font-bold text-xs px-2.5 py-1.5 rounded-xl min-w-[42px] text-center">
+                            ${dynamicScore}%
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (currentRegion === "Europa") map.flyTo([41.5, -5.5], 4);
+            if (currentRegion === "Afrika") map.flyTo([12.0, 10.0], 3);
+            if (currentRegion === "Amerika") map.flyTo([20.0, -90.0], 3);
+            if (currentRegion === "Asien") map.flyTo([5.0, 110.0], 3);
+        }
+
+        function filterRegion(regionName) {
+            currentRegion = regionName;
+            showListView();
+            updateUI();
+        }
+
+        async function showSpotDetail(spotId) {
+            const spot = surfSpots.find(s => s.id === spotId);
+            if (!spot) return;
+
+            document.getElementById('spot-list-container').classList.add('hidden');
+            document.getElementById('spot-detail-view').classList.remove('hidden');
+
+            document.getElementById('detail-name').innerText = spot.name;
+            document.getElementById('detail-flag').innerText = spot.flag;
+            document.getElementById('detail-sub').innerText = spot.sub;
+            document.getElementById('detail-airport').innerText = spot.airport;
+            document.getElementById('detail-price').innerText = spot.flightPrice;
+            document.getElementById('detail-camp').innerText = spot.campInfo;
+
+            map.flyTo([spot.lat, spot.lng], 7, { duration: 1 });
+
+            const dates = getCalculatedWeekDays();
+            const selectedAirport = document.getElementById('airport-selector').value;
+
+            const days = ["mo", "di", "mi", "do", "fr", "sa", "so"];
+            days.forEach(d => {
+                document.getElementById(`label-${d}`).innerHTML = `${d.toUpperCase()}<br><span class="text-[8px] font-normal block mt-0.5">${dates[d + "Lbl"]}</span>`;
+            });
+
+            // Korrigierter Link-Syntax für Google Flights
+            document.getElementById('flight-btn').onclick = () => {
+                const url = `https://www.google.com/travel/flights?q=Flights%20to%20${spot.airport}%20from%20${selectedAirport}%20on%20${dates.fr}%20through%20${dates.so}`;
+                window.open(url, '_blank');
+            };
+
+            const sourceBadge = document.getElementById('detail-data-source-badge');
+
+            if (isFutureClimateMode()) {
+                sourceBadge.innerText = "📊 Historische Klimadaten (Forecast > 11 Tage)";
+                sourceBadge.className = "text-[10px] font-bold px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800";
+
+                days.forEach(d => {
+                    let factor = d === "sa" ? 1.0 : (d === "fr" ? 0.9 : 0.85);
+                    let h = (parseFloat(spot.defaultForecast.sa) * factor).toFixed(1);
+                    document.getElementById(`wave-${d}`).innerText = `${h}m`;
+                    document.getElementById(`period-${d}`).innerText = `${spot.defaultForecast.p}s`;
+                });
+
+                const dynamicScore = calculateDynamicScore(spot.defaultForecast.sa);
+                const scoreBadge = document.getElementById('detail-score');
+                scoreBadge.innerText = `${dynamicScore}%`;
+                scoreBadge.className = `text-white font-bold text-sm px-3 py-2 rounded-xl ${dynamicScore >= 80 ? "bg-green-500" : "bg-orange-500"}`;
+
+            } else {
+                sourceBadge.innerText = "🌐 Live OpenSea Ocean-Forecast";
+                sourceBadge.className = "text-[10px] font-bold px-2.5 py-1 rounded-lg bg-blue-100 text-blue-800";
+
+                days.forEach(d => {
+                    document.getElementById(`wave-${d}`).innerText = `--`;
+                    document.getElementById(`period-${d}`).innerText = `--`;
+                });
+
+                try {
+                    // JETZT NEU: swell_wave_height & swell_wave_peak_period für echten Groundswell-Match
+                    const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period&start_date=${dates.mo}&end_date=${dates.so}&timezone=auto`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    if (data && data.hourly) {
+                        let saWaveHeight = spot.defaultForecast.sa;
+
+                        days.forEach(d => {
+                            const dateStr = dates[d];
+                            const indices = [];
+                            data.hourly.time.forEach((t, idx) => {
+                                if (t.startsWith(dateStr)) indices.push(idx);
+                            });
+
+                            if (indices.length > 0) {
+                                const midIdx = indices[Math.min(12, indices.length - 1)];
+                                const h = data.hourly.swell_wave_height[midIdx];
+                                const p = data.hourly.swell_wave_peak_period[midIdx];
+                                
+                                if (h != null) {
+                                    document.getElementById(`wave-${d}`).innerText = `${h.toFixed(1)}m`;
+                                    if (d === "sa") saWaveHeight = h;
+                                }
+                                if (p != null) {
+                                    document.getElementById(`period-${d}`).innerText = `${p.toFixed(0)}s`;
+                                } else {
+                                    document.getElementById(`period-${d}`).innerText = `${spot.defaultForecast.p}s`;
+                                }
+                            }
+                        });
+
+                        const dynamicScore = calculateDynamicScore(saWaveHeight);
+                        const scoreBadge = document.getElementById('detail-score');
+                        scoreBadge.innerText = `${dynamicScore}%`;
+                        scoreBadge.className = `text-white font-bold text-sm px-3 py-2 rounded-xl ${dynamicScore >= 80 ? "bg-green-500" : "bg-orange-500"}`;
+                    }
+                } catch (e) {
+                    console.log("Fehler bei Live-Abfrage.");
+                }
+            }
+        }
+
+        function showListView() {
+            document.getElementById('spot-detail-view').classList.add('hidden');
+            document.getElementById('spot-list-container').classList.remove('hidden');
+            if (currentRegion === "Europa") map.flyTo([41.5, -5.5], 4);
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>
