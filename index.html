@@ -478,9 +478,10 @@
             });
             mapMarkers.forEach(obj => map.removeLayer(obj.marker));
             mapMarkers = [];
-            renderSpotList();
             if (!isFutureClimateMode()) {
                 await refreshRegionForecasts();
+            } else {
+                renderSpotList();
             }
             if (currentRegion === "Europa") map.flyTo([41.5, -5.5], 4);
             if (currentRegion === "Afrika") map.flyTo([12.0, 10.0], 3);
