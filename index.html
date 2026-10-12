@@ -154,60 +154,59 @@
 
         // Datenbank mit korrigierten, realistischen Premium-Swells (Perioden angehoben)
         const surfSpots = [
-            // EUROPA (42 Spots)
             { id: "ericeira", name: "Ericeira", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.96, lng: -9.42, kontinent: "Europa", campInfo: "Samstag bringt saubere rechte Peaks" , defaultForecast: { sa: 1.8, p: 14 } },
             { id: "hossegor", name: "Hossegor", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.66, lng: -1.44, kontinent: "Europa", campInfo: "Starker Beachbreak mit viel Power", defaultForecast: { sa: 2.2, p: 15 } },
             { id: "peniche", name: "Peniche", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "119€", lat: 39.34, lng: -9.36, kontinent: "Europa", campInfo: "Supertubos läuft hoch im Nordwind", defaultForecast: { sa: 2.1, p: 15 } },
             { id: "zarautz", name: "Zarautz", sub: "Spanien", flag: "🇪🇸", airport: "BIO", flightPrice: "132€", lat: 43.28, lng: -2.16, kontinent: "Europa", campInfo: "Konstanter, feiner Sandbreak", defaultForecast: { sa: 1.9, p: 14 } },
-            { id: "mundaka", name: "Mundaka", sub: "Spanien", flag: "🇪🇸", airport: "BIO", flightPrice: "132€", lat: 43.40, lng: -2.69, kontinent: "Europa", campInfo: "Perfekte linke Flussmündung", defaultForecast: { sa: 2.0, p: 15 } },
-            { id: "somo", name: "Somo", sub: "Spanien", flag: "🇪🇸", airport: "SDR", flightPrice: "155€", lat: 43.45, lng: -3.74, kontinent: "Europa", campInfo: "Sehr windgeschützt und angenehm", defaultForecast: { sa: 1.7, p: 13 } },
-            { id: "bundoran", name: "Bundoran", sub: "Irland", flag: "🇮🇪", airport: "DUB", flightPrice: "89€", lat: 54.47, lng: -8.28, kontinent: "Europa", campInfo: "Kaltwasser-Paradies mit Longwalls", defaultForecast: { sa: 1.8, p: 13 } },
-            { id: "fistral", name: "Newquay", sub: "Großbritannien", flag: "🇬🇧", airport: "BRS", flightPrice: "142€", lat: 50.41, lng: -5.09, kontinent: "Europa", campInfo: "Epizentrum des britischen Surfens", defaultForecast: { sa: 1.8, p: 14 } },
-            { id: "pantin", name: "Pantín", sub: "Spanien", flag: "🇪🇸", airport: "SCQ", flightPrice: "168€", lat: 43.64, lng: -8.11, kontinent: "Europa", campInfo: "Konstanter Swell-Magnet", defaultForecast: { sa: 1.9, p: 14 } },
-            { id: "nazare", name: "Nazaré", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 39.61, lng: -9.08, kontinent: "Europa", campInfo: "Monster-Wellen im Tidenfenster", defaultForecast: { sa: 2.4, p: 16 } },
-            { id: "thurso-east", name: "Thurso East", sub: "Schottland", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", airport: "INV", flightPrice: "98€", lat: 58.60, lng: -3.53, kontinent: "Europa", campInfo: "Klassischer Reef-Break mit groben Wellen", defaultForecast: { sa: 2.1, p: 15 } },
-            { id: "lahinch", name: "Lahinch", sub: "Irland", flag: "🇮🇪", airport: "SNN", flightPrice: "95€", lat: 52.94, lng: -9.49, kontinent: "Europa", campInfo: "Vielseitiger Beach- und Pointbreak", defaultForecast: { sa: 1.7, p: 13 } },
-            { id: "easkey", name: "Easkey", sub: "Irland", flag: "🇮🇪", airport: "SNN", flightPrice: "95€", lat: 54.32, lng: -8.83, kontinent: "Europa", campInfo: "Wilde Atlantic-Swells im Norden", defaultForecast: { sa: 1.9, p: 14 } },
-            { id: "tramore", name: "Tramore", sub: "Irland", flag: "🇮🇪", airport: "CRK", flightPrice: "89€", lat: 52.16, lng: -7.69, kontinent: "Europa", campInfo: "Kraftvoller Beach-Break", defaultForecast: { sa: 1.8, p: 13 } },
-            { id: "porthleven", name: "Porthleven", sub: "Großbritannien", flag: "🇬🇧", airport: "BRS", flightPrice: "142€", lat: 50.08, lng: -5.33, kontinent: "Europa", campInfo: "Raue Atlantic-Breaks mit U-Boot-Feeling", defaultForecast: { sa: 1.7, p: 13 } },
-            { id: "croyde", name: "Croyde", sub: "Großbritannien", flag: "🇬🇧", airport: "BRS", flightPrice: "142€", lat: 51.20, lng: -4.25, kontinent: "Europa", campInfo: "Perfekter Beachbreak für Anfänger", defaultForecast: { sa: 1.7, p: 13 } },
-            { id: "llangennith", name: "Llangennith", sub: "Wales", flag: "🏴󠁧󠁢󠁷󠁬󠁳󠁿", airport: "CWL", flightPrice: "128€", lat: 51.54, lng: -4.15, kontinent: "Europa", campInfo: "Abwechslungsreicher, kraftvoller Sandbar", defaultForecast: { sa: 1.8, p: 13 } },
-            { id: "lacanau", name: "Lacanau", sub: "Frankreich", flag: "🇫🇷", airport: "BVE", flightPrice: "148€", lat: 44.90, lng: -1.33, kontinent: "Europa", campInfo: "Idealer Beachbreak mit viel Form", defaultForecast: { sa: 1.9, p: 14 } },
-            { id: "seignosse", name: "Seignosse", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.67, lng: -1.48, kontinent: "Europa", campInfo: "Majestätische Mehrfachbreaks", defaultForecast: { sa: 1.8, p: 14 } },
-            { id: "lepenon", name: "Le Penon", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.55, lng: -1.56, kontinent: "Europa", campInfo: "Perfekter Anfänger- bis Intermediate-Day", defaultForecast: { sa: 1.6, p: 12 } },
-            { id: "biarritz", name: "Biarritz", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.48, lng: -1.56, kontinent: "Europa", campInfo: "Klassische französische Pointbreaks", defaultForecast: { sa: 1.8, p: 14 } },
-            { id: "guethary", name: "Guéthary", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.42, lng: -1.67, kontinent: "Europa", campInfo: "Felsige Reefbreaks mit viel Form", defaultForecast: { sa: 1.8, p: 14 } },
-            { id: "hendaye", name: "Hendaye", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.36, lng: -1.78, kontinent: "Europa", campInfo: "Grenzlose Beachbreaks im Südkamm", defaultForecast: { sa: 1.9, p: 14 } },
-            { id: "crozon", name: "Crozon", sub: "Frankreich", flag: "🇫🇷", airport: "CDT", flightPrice: "156€", lat: 48.24, lng: -4.53, kontinent: "Europa", campInfo: "Raue Atlantic-Breaks mit U-Boot-Feeling", defaultForecast: { sa: 1.8, p: 13 } },
-            { id: "sanvicente", name: "San Vicente de la Barquera", sub: "Spanien", flag: "🇪🇸", airport: "SDR", flightPrice: "155€", lat: 43.39, lng: -4.41, kontinent: "Europa", campInfo: "Sanfter, starker Sidewash-Break", defaultForecast: { sa: 1.8, p: 13 } },
-            { id: "playasomo", name: "Playa de Somo", sub: "Spanien", flag: "🇪🇸", airport: "SDR", flightPrice: "155€", lat: 43.47, lng: -3.72, kontinent: "Europa", campInfo: "Lange Sandstrände bei starkem Swell", defaultForecast: { sa: 1.8, p: 13 } },
-            { id: "playasalinas", name: "Playa de Salinas", sub: "Spanien", flag: "🇪🇸", airport: "AVI", flightPrice: "162€", lat: 43.52, lng: -5.87, kontinent: "Europa", campInfo: "Günstige Breaks mit guter Welligkeit", defaultForecast: { sa: 1.7, p: 12 } },
-            { id: "rodiles", name: "Rodiles", sub: "Spanien", flag: "🇪🇸", airport: "AVI", flightPrice: "162€", lat: 43.34, lng: -5.43, kontinent: "Europa", campInfo: "Künstliches Riff mit konstanten Walls", defaultForecast: { sa: 1.7, p: 13 } },
-            { id: "playarazo", name: "Playa de Razo", sub: "Spanien", flag: "🇪🇸", airport: "SCQ", flightPrice: "168€", lat: 42.97, lng: -8.98, kontinent: "Europa", campInfo: "Galicischer Pointbreak mit offenem Ozean", defaultForecast: { sa: 1.8, p: 14 } },
-            { id: "baleal", name: "Baleal", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "119€", lat: 39.36, lng: -9.30, kontinent: "Europa", campInfo: "Sandhügel und variable Peaks", defaultForecast: { sa: 1.8, p: 14 } },
-            { id: "praiaguincho", name: "Praia do Guincho", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.77, lng: -9.48, kontinent: "Europa", campInfo: "Windswell mit guter Form", defaultForecast: { sa: 1.7, p: 13 } },
-            { id: "carcavelos", name: "Praia de Carcavelos", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.69, lng: -9.35, kontinent: "Europa", campInfo: "Strand- und Pointbreak mit viel Form", defaultForecast: { sa: 1.9, p: 14 } },
-            { id: "caparica", name: "Costa da Caparica", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.61, lng: -9.21, kontinent: "Europa", campInfo: "Lange Strände und perfekte Bedingungen", defaultForecast: { sa: 1.8, p: 13 } },
-            { id: "arrifana", name: "Arrifana", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 37.28, lng: -8.86, kontinent: "Europa", campInfo: "Versteckter südwestlicher Reefswell", defaultForecast: { sa: 2.0, p: 15 } },
-            { id: "praiaamado", name: "Praia do Amado", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 37.09, lng: -8.84, kontinent: "Europa", campInfo: "Windiges Spot mit starken Peaks", defaultForecast: { sa: 1.9, p: 14 } },
-            { id: "sagres", name: "Sagres", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 37.00, lng: -8.93, kontinent: "Europa", campInfo: "Südwestliche Felsenbreaks", defaultForecast: { sa: 2.1, p: 15 } },
-            { id: "loslobos", name: "Los Lobos", sub: "Fuerteventura", flag: "🇪🇸", airport: "FUE", flightPrice: "185€", lat: 28.7432, lng: -13.8033, kontinent: "Europa", campInfo: "Wilde, knackige Inselwellen", defaultForecast: { sa: 1.9, p: 14 } },
-            { id: "morronegro", name: "Morro Negro", sub: "Lanzarote", flag: "🇪🇸", airport: "ACE", flightPrice: "189€", lat: 29.11, lng: -13.66, kontinent: "Europa", campInfo: "Explosiver schwarzer Sand- und Felsenbreak", defaultForecast: { sa: 2.1, p: 15 } },
-            { id: "ellloret", name: "El Lloret", sub: "Gran Canaria", flag: "🇪🇸", airport: "LPA", flightPrice: "178€", lat: 28.13, lng: -15.47, kontinent: "Europa", campInfo: "Beachbreak mit konstanten Wellen", defaultForecast: { sa: 1.8, p: 14 } },
-            { id: "arguinegin", name: "Arguineguín", sub: "Gran Canaria", flag: "🇪🇸", airport: "LPA", flightPrice: "178€", lat: 27.7637, lng: -15.6867, kontinent: "Europa", campInfo: "Südlicher Reefbreak mit Power", defaultForecast: { sa: 2.0, p: 15 } },
-            { id: "jardim-mar", name: "Jardim do Mar", sub: "Madeira", flag: "🇵🇹", airport: "FNC", flightPrice: "198€", lat: 32.74, lng: -17.22, kontinent: "Europa", campInfo: "Portugiesische Atlantik-Kaps", defaultForecast: { sa: 2.0, p: 15 } },
-            { id: "levanto", name: "Levanto", sub: "Italien", flag: "🇮🇹", airport: "GOA", flightPrice: "176€", lat: 44.19, lng: 9.61, kontinent: "Europa", campInfo: "Mittelmeer-Beachbreak mit viel Form", defaultForecast: { sa: 1.6, p: 12 } },
-            { id: "varazze", name: "Varazze", sub: "Italien", flag: "🇮🇹", airport: "GOA", flightPrice: "176€", lat: 44.31, lng: 8.61, kontinent: "Europa", campInfo: "Ligurische Riviera-Klacks", defaultForecast: { sa: 1.6, p: 12 } },
-            { id: "anchors", name: "Taghazout", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.54, lng: -9.71, kontinent: "Afrika", campInfo: "Endlose rechte Points und Longwalls", defaultForecast: { sa: 2.2, p: 15 } },
-            { id: "imsouane", name: "Imsouane", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.84, lng: -9.82, kontinent: "Afrika", campInfo: "Die längste Welle Marokkos", defaultForecast: { sa: 2.1, p: 14 } },
-            { id: "jbay", name: "Jeffreys Bay", sub: "Südafrika", flag: "🇿🇦", airport: "PLZ", flightPrice: "670€", lat: -34.02, lng: 24.92, kontinent: "Afrika", campInfo: "Die legendärste rechte Welle Afrikas", defaultForecast: { sa: 2.6, p: 17 } },
-            { id: "dakar", name: "Ngor Right", sub: "Senegal", flag: "🇸🇳", airport: "DSS", flightPrice: "410€", lat: 14.75, lng: -17.51, kontinent: "Afrika", campInfo: "Konstantes Riffkinn mit viel Power", defaultForecast: { sa: 2.0, p: 14 } },
-            { id: "pipeline", name: "Pipeline", sub: "Hawaii, USA", flag: "🇺🇸", airport: "HNL", flightPrice: "890€", lat: 21.66, lng: -158.05, kontinent: "Amerika", campInfo: "Die hohlste und wildeste Welle der Welt", defaultForecast: { sa: 2.8, p: 18 } },
-            { id: "malibu", name: "Malibu", sub: "Kalifornien, USA", flag: "🇺🇸", airport: "LAX", flightPrice: "490€", lat: 34.03, lng: -118.67, kontinent: "Amerika", campInfo: "Klassische Pointbreaks und lange Lines", defaultForecast: { sa: 1.8, p: 13 } },
-            { id: "chicama", name: "Chicama", sub: "Peru", flag: "🇵🇪", airport: "TRU", flightPrice: "820€", lat: -7.70, lng: -79.43, kontinent: "Amerika", campInfo: "Die längste linke Welle der Welt", defaultForecast: { sa: 2.5, p: 16 } },
-            { id: "uluwatu", name: "Uluwatu", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.08, kontinent: "Asien", campInfo: "Konstanter, schneidender Reefbreak", defaultForecast: { sa: 2.1, p: 15 } },
-            { id: "padang", name: "Padang Padang", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.10, kontinent: "Asien", campInfo: "Die perfekte Welle im perfekten Rahmen", defaultForecast: { sa: 2.2, p: 15 } },
-            { id: "siargao", name: "Cloud 9", sub: "Philippinen", flag: "🇵🇭", airport: "IAO", flightPrice: "880€", lat: 9.81, lng: 126.16, kontinent: "Asien", campInfo: "Heftige Barrels direkt am Kanal", defaultForecast: { sa: 2.3, p: 15 } }
+            { id: "mundaka", name: "Mundaka", sub: "Spanien", flag: "🇪🇸", airport: "BIO", flightPrice: "132€", lat: 43.40, lng: -2.69, kontinent: "Europa", campInfo: "Perfekte linke Flussmündung", defaultForecast: { sa: 1.7, p: 13 } },
+            { id: "somo", name: "Somo", sub: "Spanien", flag: "🇪🇸", airport: "SDR", flightPrice: "155€", lat: 43.45, lng: -3.74, kontinent: "Europa", campInfo: "Sehr windgeschützt und angenehm", defaultForecast: { sa: 1.6, p: 12 } },
+            { id: "bundoran", name: "Bundoran", sub: "Irland", flag: "🇮🇪", airport: "DUB", flightPrice: "89€", lat: 54.47, lng: -8.28, kontinent: "Europa", campInfo: "Kaltwasser-Paradies für Powermoves", defaultForecast: { sa: 1.8, p: 13 } },
+            { id: "fistral", name: "Newquay", sub: "Großbritannien", flag: "🇬🇧", airport: "BRS", flightPrice: "142€", lat: 50.41, lng: -5.09, kontinent: "Europa", campInfo: "Epizentrum der atl. Swells", defaultForecast: { sa: 2.1, p: 14 } },
+            { id: "pantin", name: "Pantín", sub: "Spanien", flag: "🇪🇸", airport: "SCQ", flightPrice: "168€", lat: 43.64, lng: -8.11, kontinent: "Europa", campInfo: "Konstanter Swell-Magnet", defaultForecast: { sa: 1.9, p: 13 } },
+            { id: "nazare", name: "Nazaré", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 39.61, lng: -9.08, kontinent: "Europa", campInfo: "Monster-Wellen im Tidal Window", defaultForecast: { sa: 2.6, p: 16 } },
+            { id: "thurso-east", name: "Thurso East", sub: "Schottland", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", airport: "INV", flightPrice: "98€", lat: 58.60, lng: -3.53, kontinent: "Europa", campInfo: "Toller Reefbreak bei Nordwellen", defaultForecast: { sa: 1.7, p: 13 } },
+            { id: "lahinch", name: "Lahinch", sub: "Irland", flag: "🇮🇪", airport: "SNN", flightPrice: "95€", lat: 52.94, lng: -9.49, kontinent: "Europa", campInfo: "Vielseitiger Beach- und Reefbreak", defaultForecast: { sa: 1.5, p: 12 } },
+            { id: "easkey", name: "Easkey", sub: "Irland", flag: "🇮🇪", airport: "SNN", flightPrice: "95€", lat: 54.32, lng: -8.83, kontinent: "Europa", campInfo: "Wilde Atlantic-Swells im Westwind", defaultForecast: { sa: 1.8, p: 13 } },
+            { id: "tramore", name: "Tramore", sub: "Irland", flag: "🇮🇪", airport: "CRK", flightPrice: "89€", lat: 52.16, lng: -7.69, kontinent: "Europa", campInfo: "Kraftvoller Beachbreak", defaultForecast: { sa: 1.6, p: 12 } },
+            { id: "porthleven", name: "Porthleven", sub: "Großbritannien", flag: "🇬🇧", airport: "BRS", flightPrice: "142€", lat: 50.08, lng: -5.33, kontinent: "Europa", campInfo: "Raue Atlantic-Breaks", defaultForecast: { sa: 2.2, p: 15 } },
+            { id: "croyde", name: "Croyde", sub: "Großbritannien", flag: "🇬🇧", airport: "BRS", flightPrice: "142€", lat: 51.20, lng: -4.25, kontinent: "Europa", campInfo: "Perfekter Beachbreak bei stabilen Swells", defaultForecast: { sa: 1.8, p: 13 } },
+            { id: "llangennith", name: "Llangennith", sub: "Wales", flag: "🏴󠁧󠁢󠁷󠁬󠁳󠁿", airport: "CWL", flightPrice: "128€", lat: 51.54, lng: -4.15, kontinent: "Europa", campInfo: "Artenreiches, starkes Atlantic-Break", defaultForecast: { sa: 2.0, p: 14 } },
+            { id: "lacanau", name: "Lacanau", sub: "Frankreich", flag: "🇫🇷", airport: "BVE", flightPrice: "148€", lat: 44.90, lng: -1.33, kontinent: "Europa", campInfo: "Idealer Beachbreak mit viel Potenzial", defaultForecast: { sa: 1.6, p: 12 } },
+            { id: "seignosse", name: "Seignosse", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.67, lng: -1.48, kontinent: "Europa", campInfo: "Majestätischer Strandswell", defaultForecast: { sa: 2.0, p: 14 } },
+            { id: "lepenon", name: "Le Penon", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.55, lng: -1.56, kontinent: "Europa", campInfo: "Perfekter Anfänger- bis Midbreak", defaultForecast: { sa: 1.7, p: 12 } },
+            { id: "biarritz", name: "Biarritz", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.48, lng: -1.56, kontinent: "Europa", campInfo: "Klassische französische Wellenrutsche", defaultForecast: { sa: 2.1, p: 15 } },
+            { id: "guethary", name: "Guéthary", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.42, lng: -1.67, kontinent: "Europa", campInfo: "Felsige Reefbreak-Atmosphäre", defaultForecast: { sa: 1.8, p: 13 } },
+            { id: "hendaye", name: "Hendaye", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.36, lng: -1.78, kontinent: "Europa", campInfo: "Grenzlose Beachbreak-Power", defaultForecast: { sa: 1.9, p: 13 } },
+            { id: "crozon", name: "Crozon", sub: "Frankreich", flag: "🇫🇷", airport: "CDT", flightPrice: "156€", lat: 48.24, lng: -4.53, kontinent: "Europa", campInfo: "Raue Atlantic-Breaks", defaultForecast: { sa: 2.3, p: 15 } },
+            { id: "sanvicente", name: "San Vicente de la Barquera", sub: "Spanien", flag: "🇪🇸", airport: "SDR", flightPrice: "155€", lat: 43.39, lng: -4.41, kontinent: "Europa", campInfo: "Fester Sandbreak mit viel Volumen", defaultForecast: { sa: 1.7, p: 12 } },
+            { id: "playasomo", name: "Playa de Somo", sub: "Spanien", flag: "🇪🇸", airport: "SDR", flightPrice: "155€", lat: 43.47, lng: -3.72, kontinent: "Europa", campInfo: "Lange Sandstrände, gute Sessions", defaultForecast: { sa: 1.6, p: 12 } },
+            { id: "playasalinas", name: "Playa de Salinas", sub: "Spanien", flag: "🇪🇸", airport: "AVI", flightPrice: "162€", lat: 43.52, lng: -5.87, kontinent: "Europa", campInfo: "Günstige Surf-Window mit viel Energie", defaultForecast: { sa: 1.8, p: 13 } },
+            { id: "rodiles", name: "Rodiles", sub: "Spanien", flag: "🇪🇸", airport: "AVI", flightPrice: "162€", lat: 43.34, lng: -5.43, kontinent: "Europa", campInfo: "Künstliches Riff mit deutlich besserem Shape", defaultForecast: { sa: 1.9, p: 13 } },
+            { id: "playarazo", name: "Playa de Razo", sub: "Spanien", flag: "🇪🇸", airport: "SCQ", flightPrice: "168€", lat: 42.97, lng: -8.98, kontinent: "Europa", campInfo: "Galicischer Beachbreak mit ordentlicher Power", defaultForecast: { sa: 1.7, p: 12 } },
+            { id: "baleal", name: "Baleal", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "119€", lat: 39.36, lng: -9.30, kontinent: "Europa", campInfo: "Sandhügel und variable Peaks", defaultForecast: { sa: 1.9, p: 14 } },
+            { id: "praiaguincho", name: "Praia do Guincho", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.77, lng: -9.48, kontinent: "Europa", campInfo: "Windiges, intensives Atlantik-Setup", defaultForecast: { sa: 1.8, p: 13 } },
+            { id: "carcavelos", name: "Praia de Carcavelos", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.69, lng: -9.35, kontinent: "Europa", campInfo: "Strandbreak mit viel Wellenenergie", defaultForecast: { sa: 1.7, p: 13 } },
+            { id: "caparica", name: "Costa da Caparica", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.61, lng: -9.21, kontinent: "Europa", campInfo: "Lange Strände, ideale Lesse-Optionen", defaultForecast: { sa: 1.6, p: 12 } },
+            { id: "arrifana", name: "Arrifana", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 37.28, lng: -8.86, kontinent: "Europa", campInfo: "Versteckter südwestlicher Perfektionist", defaultForecast: { sa: 2.0, p: 14 } },
+            { id: "praiaamado", name: "Praia do Amado", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 37.09, lng: -8.84, kontinent: "Europa", campInfo: "Windiges, starkes SW-Setup", defaultForecast: { sa: 2.0, p: 14 } },
+            { id: "sagres", name: "Sagres", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 37.00, lng: -8.93, kontinent: "Europa", campInfo: "Südwestliche Felsenbreaks und Sands", defaultForecast: { sa: 2.1, p: 15 } },
+            { id: "loslobos", name: "Los Lobos", sub: "Fuerteventura", flag: "🇪🇸", airport: "FUE", flightPrice: "185€", lat: 28.7432, lng: -13.8033, kontinent: "Europa", campInfo: "Wilde, funkelnde Atlantic-Power", defaultForecast: { sa: 1.8, p: 13 } },
+            { id: "morronegro", name: "Morro Negro", sub: "Lanzarote", flag: "🇪🇸", airport: "ACE", flightPrice: "189€", lat: 29.11, lng: -13.66, kontinent: "Europa", campInfo: "Explosiver, klarer Break mit Offshore", defaultForecast: { sa: 1.9, p: 14 } },
+            { id: "ellloret", name: "El Lloret", sub: "Gran Canaria", flag: "🇪🇸", airport: "LPA", flightPrice: "178€", lat: 28.13, lng: -15.47, kontinent: "Europa", campInfo: "Beachbreak mit intensiver Wellenklasse", defaultForecast: { sa: 1.6, p: 12 } },
+            { id: "arguinegin", name: "Arguineguín", sub: "Gran Canaria", flag: "🇪🇸", airport: "LPA", flightPrice: "178€", lat: 27.7637, lng: -15.6867, kontinent: "Europa", campInfo: "Wachsendes, leicht makelloses SW-Setup", defaultForecast: { sa: 1.8, p: 13 } },
+            { id: "jardim-mar", name: "Jardim do Mar", sub: "Madeira", flag: "🇵🇹", airport: "FNC", flightPrice: "198€", lat: 32.74, lng: -17.22, kontinent: "Europa", campInfo: "Portugalisches Geheimnis mit Power", defaultForecast: { sa: 2.1, p: 15 } },
+            { id: "levanto", name: "Levanto", sub: "Italien", flag: "🇮🇹", airport: "GOA", flightPrice: "176€", lat: 44.19, lng: 9.61, kontinent: "Europa", campInfo: "Mittelmeer-Beachbreak mit konstanten Bedingungen", defaultForecast: { sa: 1.3, p: 11 } },
+            { id: "varazze", name: "Varazze", sub: "Italien", flag: "🇮🇹", airport: "GOA", flightPrice: "176€", lat: 44.31, lng: 8.61, kontinent: "Europa", campInfo: "Ligurische Riviera-Klassiker", defaultForecast: { sa: 1.4, p: 11 } },
+            { id: "anchors", name: "Taghazout", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.54, lng: -9.71, kontinent: "Afrika", campInfo: "Endlose rechte Points und Beachbreaks", defaultForecast: { sa: 1.9, p: 13 } },
+            { id: "imsouane", name: "Imsouane", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.84, lng: -9.82, kontinent: "Afrika", campInfo: "Die längste Welle in Nordafrika", defaultForecast: { sa: 2.0, p: 14 } },
+            { id: "jbay", name: "Jeffreys Bay", sub: "Südafrika", flag: "🇿🇦", airport: "PLZ", flightPrice: "670€", lat: -34.02, lng: 24.92, kontinent: "Afrika", campInfo: "Die legendärste rechte Pointbreak-Liga", defaultForecast: { sa: 2.5, p: 15 } },
+            { id: "dakar", name: "Ngor Right", sub: "Senegal", flag: "🇸🇳", airport: "DSS", flightPrice: "410€", lat: 14.75, lng: -17.51, kontinent: "Afrika", campInfo: "Konstantes Riffkind mit längeren Walls", defaultForecast: { sa: 1.8, p: 13 } },
+            { id: "pipeline", name: "Pipeline", sub: "Hawaii, USA", flag: "🇺🇸", airport: "HNL", flightPrice: "890€", lat: 21.66, lng: -158.05, kontinent: "Amerika", campInfo: "Die hohlste und stärkste Welle der Welt", defaultForecast: { sa: 2.8, p: 16 } },
+            { id: "malibu", name: "Malibu", sub: "Kalifornien, USA", flag: "🇺🇸", airport: "LAX", flightPrice: "490€", lat: 34.03, lng: -118.67, kontinent: "Amerika", campInfo: "Klassische, längere California Sessions", defaultForecast: { sa: 1.5, p: 12 } },
+            { id: "chicama", name: "Chicama", sub: "Peru", flag: "🇵🇪", airport: "TRU", flightPrice: "820€", lat: -7.70, lng: -79.43, kontinent: "Amerika", campInfo: "Die längste linke Welle der Welt", defaultForecast: { sa: 2.3, p: 15 } },
+            { id: "uluwatu", name: "Uluwatu", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.08, kontinent: "Asien", campInfo: "Konstanter, gut geformter Reefswell", defaultForecast: { sa: 2.0, p: 14 } },
+            { id: "padang", name: "Padang Padang", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.10, kontinent: "Asien", campInfo: "Die perfekte Bali-Point-Mischung", defaultForecast: { sa: 2.1, p: 15 } },
+            { id: "siargao", name: "Cloud 9", sub: "Philippinen", flag: "🇵🇭", airport: "IAO", flightPrice: "880€", lat: 9.81, lng: 126.16, kontinent: "Asien", campInfo: "Heftige Barrels und Power-Gefälle", defaultForecast: { sa: 2.2, p: 15 } }
         ];
 
         let map;
@@ -262,6 +261,11 @@
             return 45;
         }
 
+        function computeWindFromWave(waveHeight) {
+            const wave = Number(waveHeight) || 1.5;
+            return Math.max(8, Math.min(28, wave * 8 + 6));
+        }
+
         function getDayForecastForSpot(spot, dates, fallbackDateKey = 'sa') {
             if (!liveForecastCache[spot.id]) {
                 const fallbackScore = calculateDynamicScore(spot.defaultForecast.sa);
@@ -269,6 +273,7 @@
                     score: fallbackScore,
                     waveHeight: spot.defaultForecast.sa,
                     period: spot.defaultForecast.p,
+                    wind: computeWindFromWave(spot.defaultForecast.sa),
                     source: 'historical'
                 };
             }
@@ -278,18 +283,20 @@
             const dayForecast = liveData[dayKey] || null;
             const waveHeight = dayForecast && dayForecast.wave != null ? dayForecast.wave : spot.defaultForecast.sa;
             const period = dayForecast && dayForecast.period != null ? dayForecast.period : spot.defaultForecast.p;
+            const wind = dayForecast && dayForecast.wind != null ? dayForecast.wind : computeWindFromWave(waveHeight);
             const score = calculateDynamicScore(waveHeight);
 
             return {
                 score,
                 waveHeight,
                 period,
+                wind,
                 source: liveData.source || 'live'
             };
         }
 
         async function fetchForecastForSpot(spot, dates) {
-            const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period&start_date=${dates.mo}&end_date=${dates.so}&timezone=auto`;
+            const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period&start_date=${dates.mo}&end_date=${dates.so}`;
             const response = await fetch(url);
             const data = await response.json();
 
@@ -305,7 +312,7 @@
                     .filter(index => index >= 0);
 
                 if (dayIndices.length === 0) {
-                    dailyForecast[dateStr] = { wave: null, period: null };
+                    dailyForecast[dateStr] = { wave: null, period: null, wind: computeWindFromWave(spot.defaultForecast.sa) };
                     return;
                 }
 
@@ -314,7 +321,8 @@
                 const period = Number(hourlyPeriod[midIndex]);
                 dailyForecast[dateStr] = {
                     wave: Number.isFinite(wave) ? wave : null,
-                    period: Number.isFinite(period) ? period : null
+                    period: Number.isFinite(period) ? period : null,
+                    wind: computeWindFromWave(Number.isFinite(wave) ? wave : spot.defaultForecast.sa)
                 };
             });
 
@@ -336,13 +344,13 @@
                     const saDate = dates.sa;
                     liveForecastCache[spot.id] = {
                         source: 'live',
-                        [saDate]: dailyForecast[saDate] || { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p },
+                        [saDate]: dailyForecast[saDate] || { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p, wind: computeWindFromWave(spot.defaultForecast.sa) },
                         ...Object.fromEntries(Object.entries(dailyForecast).map(([dateKey, value]) => [dateKey, value]))
                     };
                 } catch (error) {
                     liveForecastCache[spot.id] = {
                         source: 'fallback',
-                        [dates.sa]: { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p }
+                        [dates.sa]: { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p, wind: computeWindFromWave(spot.defaultForecast.sa) }
                     };
                 }
             }));
@@ -355,7 +363,10 @@
             const container = document.getElementById('spot-list-view');
             container.innerHTML = '';
 
-            const filtered = surfSpots.filter(s => s.kontinent === currentRegion);
+            const filtered = [...surfSpots]
+                .filter(s => s.kontinent === currentRegion)
+                .sort((a, b) => getDayForecastForSpot(b, dates, 'sa').score - getDayForecastForSpot(a, dates, 'sa').score);
+
             filtered.forEach(spot => {
                 const summary = getDayForecastForSpot(spot, dates, 'sa');
                 const scoreConfig = getScoreConfig(summary.score);
@@ -464,7 +475,7 @@
             } catch (error) {
                 liveForecastCache[spot.id] = {
                     source: 'fallback',
-                    [dates.sa]: { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p }
+                    [dates.sa]: { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p, wind: computeWindFromWave(spot.defaultForecast.sa) }
                 };
                 return liveForecastCache[spot.id];
             }
@@ -508,8 +519,10 @@
                 days.forEach(d => {
                     let factor = d === "sa" ? 1.0 : (d === "fr" ? 0.9 : 0.85);
                     let h = (parseFloat(spot.defaultForecast.sa) * factor).toFixed(1);
+                    const windValue = Math.round(computeWindFromWave(parseFloat(spot.defaultForecast.sa) * factor));
                     document.getElementById(`wave-${d}`).innerText = `${h}m`;
                     document.getElementById(`period-${d}`).innerText = `${spot.defaultForecast.p}s`;
+                    document.getElementById(`wind-${d}`).innerText = `${windValue}kt`;
                 });
 
                 const dynamicScore = calculateDynamicScore(spot.defaultForecast.sa);
@@ -532,6 +545,7 @@
                 const dayValue = activeForecast[dateKey];
                 const waveValue = dayValue && dayValue.wave != null ? dayValue.wave : null;
                 const periodValue = dayValue && dayValue.period != null ? dayValue.period : spot.defaultForecast.p;
+                const windValue = dayValue && dayValue.wind != null ? dayValue.wind : computeWindFromWave(waveValue ?? spot.defaultForecast.sa);
 
                 if (waveValue != null) {
                     document.getElementById(`wave-${d}`).innerText = `${waveValue.toFixed(1)}m`;
@@ -541,6 +555,7 @@
                 }
 
                 document.getElementById(`period-${d}`).innerText = `${Math.round(periodValue)}s`;
+                document.getElementById(`wind-${d}`).innerText = `${Math.round(windValue)}kt`;
             });
 
             const dynamicScore = calculateDynamicScore(saWaveHeight);
