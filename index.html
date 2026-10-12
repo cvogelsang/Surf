@@ -274,6 +274,17 @@
             return Math.round(value * 3.6);
         }
 
+        function median(values) {
+            const cleaned = values.filter(v => Number.isFinite(v));
+            if (!cleaned.length) return null;
+            const sorted = [...cleaned].sort((a, b) => a - b);
+            const middle = Math.floor(sorted.length / 2);
+            if (sorted.length % 2 === 0) {
+                return (sorted[middle - 1] + sorted[middle]) / 2;
+            }
+            return sorted[middle];
+        }
+
         function getDayForecastForSpot(spot, dates, fallbackDateKey = 'sa') {
             const liveData = liveForecastCache[spot.id];
             if (!liveData || liveData.source !== 'live') {
@@ -281,29 +292,30 @@
             }
             const dayKey = dates[fallbackDateKey] || fallbackDateKey;
             const dayForecast = liveData[dayKey] || null;
-            if (!dayForecast || dayForecast.wave == null || dayForecast.period == null) {
+            if (!dayForecast || dayForecast.wave == null) {
                 return null;
             }
             const waveHeight = Number(dayForecast.wave);
-            const period = Number(dayForecast.period);
-            if (!Number.isFinite(waveHeight) || !Number.isFinite(period)) {
+            if (!Number.isFinite(waveHeight)) {
                 return null;
             }
             return {
                 score: calculateDynamicScore(waveHeight),
                 waveHeight,
-                period,
+                period: dayForecast.period ?? null,
                 source: 'live'
             };
         }
 
         async function fetchForecastForSpot(spot, dates) {
-            const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period,wind_speed_10m,wind_direction_10m&start_date=${dates.mo}&end_date=${dates.so}&timezone=auto`;
+            const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period,swell_wave_period,swell_wave_mean_period,wind_speed_10m,wind_direction_10m&start_date=${dates.mo}&end_date=${dates.so}&timezone=auto`;
             const response = await fetch(url);
             const data = await response.json();
             const hourlyTime = data?.hourly?.time || [];
             const hourlyWave = data?.hourly?.swell_wave_height || [];
-            const hourlyPeriod = data?.hourly?.swell_wave_peak_period || [];
+            const hourlyPeriodPeak = data?.hourly?.swell_wave_peak_period || [];
+            const hourlyPeriodAlt = data?.hourly?.swell_wave_period || [];
+            const hourlyPeriodMean = data?.hourly?.swell_wave_mean_period || [];
             const hourlyWindSpeed = data?.hourly?.wind_speed_10m || [];
             const hourlyWindDirection = data?.hourly?.wind_direction_10m || [];
             const dailyForecast = {};
@@ -319,17 +331,33 @@
                     return;
                 }
 
-                const midIndex = dayIndices[Math.min(Math.floor(dayIndices.length / 2), dayIndices.length - 1)];
-                const wave = Number(hourlyWave[midIndex]);
-                const period = Number(hourlyPeriod[midIndex]);
-                const windSpeed = Number(hourlyWindSpeed[midIndex]);
-                const windDirection = Number(hourlyWindDirection[midIndex]);
+                const waveValues = dayIndices
+                    .map(index => Number(hourlyWave[index]))
+                    .filter(value => Number.isFinite(value));
+                const periodValues = dayIndices
+                    .flatMap(index => [
+                        Number(hourlyPeriodPeak[index]),
+                        Number(hourlyPeriodAlt[index]),
+                        Number(hourlyPeriodMean[index])
+                    ])
+                    .filter(value => Number.isFinite(value) && value > 0);
+                const windValues = dayIndices
+                    .map(index => Number(hourlyWindSpeed[index]))
+                    .filter(value => Number.isFinite(value));
+                const windDirs = dayIndices
+                    .map(index => Number(hourlyWindDirection[index]))
+                    .filter(value => Number.isFinite(value));
+
+                const wave = median(waveValues);
+                const period = median(periodValues);
+                const windSpeed = median(windValues);
+                const windDirection = median(windDirs);
 
                 dailyForecast[dateStr] = {
-                    wave: Number.isFinite(wave) ? wave : null,
-                    period: Number.isFinite(period) ? period : null,
-                    windSpeed: Number.isFinite(windSpeed) ? windSpeedKmh(windSpeed) : null,
-                    windDirection: Number.isFinite(windDirection) ? windDirection : null
+                    wave: wave != null ? Number(wave.toFixed(1)) : null,
+                    period: period != null ? Number(period.toFixed(0)) : null,
+                    windSpeed: windSpeed != null ? windSpeedKmh(windSpeed) : null,
+                    windDirection: windDirection != null ? windDirection : null
                 };
             });
 
