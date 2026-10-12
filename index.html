@@ -277,12 +277,13 @@
         }
 
         async function fetchForecastForSpot(spot, dates) {
-            const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,wind_direction_10m&start_date=${dates.mo}&end_date=${dates.so}`;
+            const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period,wind_direction_10m&start_date=${dates.mo}&end_date=${dates.so}`;
             const response = await fetch(url);
             const data = await response.json();
 
             const hourlyTime = data?.hourly?.time || [];
             const waveData = data?.hourly?.swell_wave_height || [];
+            const periodData = data?.hourly?.swell_wave_peak_period || [];
             const windData = data?.hourly?.wind_direction_10m || [];
             const forecast = {};
 
@@ -293,15 +294,17 @@
                     .filter(index => index >= 0);
 
                 if (indexes.length === 0) {
-                    forecast[dateStr] = { wave: null, direction: getWindDirectionFallback(spot, dayKey) };
+                    forecast[dateStr] = { wave: null, period: null, direction: getWindDirectionFallback(spot, dayKey) };
                     return;
                 }
 
                 const midIndex = indexes[Math.min(Math.floor(indexes.length / 2), indexes.length - 1)];
                 const wave = Number(waveData[midIndex]);
+                const period = Number(periodData[midIndex]);
                 const directionDeg = Number(windData[midIndex]);
                 forecast[dateStr] = {
                     wave: Number.isFinite(wave) ? wave : null,
+                    period: Number.isFinite(period) ? period : null,
                     direction: Number.isFinite(directionDeg) ? getCardinalFromDegrees(directionDeg) : getWindDirectionFallback(spot, dayKey)
                 };
             });
@@ -316,7 +319,7 @@
                     liveForecastCache[spot.id] = await fetchForecastForSpot(spot, dates);
                 } catch (error) {
                     console.warn('Forecast error', spot.name, error);
-                    liveForecastCache[spot.id] = { [dates.sa]: { wave: null, direction: getWindDirectionFallback(spot, 'sa') } };
+                    liveForecastCache[spot.id] = { [dates.sa]: { wave: null, period: null, direction: getWindDirectionFallback(spot, 'sa') } };
                 }
             }));
             renderList();
@@ -353,11 +356,12 @@
 
             days.forEach(dayKey => {
                 const dateKey = dates[dayKey];
-                const dayValue = forecastData[dateKey] || { wave: null, direction: getWindDirectionFallback(spot, dayKey) };
+                const dayValue = forecastData[dateKey] || { wave: null, period: null, direction: getWindDirectionFallback(spot, dayKey) };
                 const waveVal = dayValue.wave != null ? Number(dayValue.wave) : null;
+                const periodVal = dayValue.period != null ? Number(dayValue.period) : null;
                 const direction = dayValue.direction || getWindDirectionFallback(spot, dayKey);
                 const waveText = waveVal != null ? `${waveVal.toFixed(1)}m` : '--';
-                const periodText = waveVal != null ? '12s' : '--';
+                const periodText = periodVal != null ? `${Math.round(periodVal)}s` : '--';
 
                 document.getElementById(`wave-${dayKey}`).innerText = waveText;
                 document.getElementById(`period-${dayKey}`).innerText = periodText;
