@@ -1,436 +1,452 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surf & Fly Weekender</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <style>
-        .leaflet-control-attribution { display: none !important; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Surf & Fly Weekender</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    .leaflet-control-attribution { display: none !important; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-900 min-h-screen flex flex-col justify-between max-w-md mx-auto shadow-2xl relative">
 
-    <div class="bg-white pt-4 px-4 pb-2 border-b border-gray-100 sticky top-0 z-[1000]">
-        <div class="flex items-center justify-between">
-            <div onclick="showListView()" class="flex items-baseline space-x-1 cursor-pointer select-none active:opacity-70 transition">
-                <h1 class="text-2xl font-black tracking-tight text-slate-800">Surf & Fly</h1>
-                <span class="text-xs font-semibold text-blue-500">Weekender</span>
-            </div>
-            <button onclick="location.reload()" class="text-slate-500 hover:text-blue-500 transition">
-                <i class="fas fa-redo-alt text-lg"></i>
-            </button>
-        </div>
-
-        <div class="flex space-x-2 mt-4 overflow-x-auto no-scrollbar pb-1">
-            <button onclick="filterRegion('Europa')" id="btn-Europa" class="bg-blue-600 text-white font-bold text-sm px-5 py-2 rounded-full transition shadow-sm">Europa</button>
-            <button onclick="filterRegion('Afrika')" id="btn-Afrika" class="bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200">Afrika</button>
-            <button onclick="filterRegion('Amerika')" id="btn-Amerika" class="bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200">Amerika</button>
-            <button onclick="filterRegion('Asien')" id="btn-Asien" class="bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200">Asien</button>
-        </div>
+  <div class="bg-white pt-4 px-4 pb-2 border-b border-gray-100 sticky top-0 z-[1000]">
+    <div class="flex items-center justify-between">
+      <div onclick="showListView()" class="flex items-baseline space-x-1 cursor-pointer select-none active:opacity-70 transition">
+        <h1 class="text-2xl font-black tracking-tight text-slate-800">Surf & Fly</h1>
+        <span class="text-xs font-semibold text-blue-500">Weekender</span>
+      </div>
+      <button onclick="location.reload()" class="text-slate-500 hover:text-blue-500 transition">
+        <i class="fas fa-redo-alt text-lg"></i>
+      </button>
     </div>
 
-    <div class="relative w-full h-[260px] bg-slate-200 z-10">
-        <div id="map" class="w-full h-full"></div>
+    <div class="flex space-x-2 mt-4 overflow-x-auto no-scrollbar pb-1">
+      <button onclick="filterRegion('Europa')" id="btn-Europa" class="bg-blue-600 text-white font-bold text-sm px-5 py-2 rounded-full transition shadow-sm">Europa</button>
+      <button onclick="filterRegion('Afrika')" id="btn-Afrika" class="bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200">Afrika</button>
+      <button onclick="filterRegion('Amerika')" id="btn-Amerika" class="bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200">Amerika</button>
+      <button onclick="filterRegion('Asien')" id="btn-Asien" class="bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200">Asien</button>
     </div>
+  </div>
 
-    <div class="bg-slate-50 flex-1 px-4 py-6 space-y-4 rounded-t-3xl -mt-6 relative z-20 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-        <div id="spot-list-container" class="space-y-3">
-            <div class="flex items-center space-x-2">
-                <div class="relative flex items-center text-[11px] font-bold text-blue-600 bg-blue-50 border border-blue-100 rounded-xl px-3 py-1.5 hover:bg-blue-100/70 transition">
-                    <i class="far fa-calendar-alt mr-1.5"></i>
-                    <span id="weekend-label-display">Wochenende wählen...</span>
-                    <input type="date" id="date-picker-input" class="absolute inset-0 opacity-0 cursor-pointer">
-                </div>
+  <div class="relative w-full h-[260px] bg-slate-200 z-10">
+    <div id="map" class="w-full h-full"></div>
+  </div>
 
-                <div class="flex items-center text-[11px] font-bold text-slate-600 bg-white border border-gray-200 rounded-xl px-2 py-1.5">
-                    <i class="fas fa-plane-departure mr-1.5 text-gray-400"></i>
-                    <select id="airport-selector" onchange="updateUI()" class="bg-transparent border-none outline-none cursor-pointer pr-1">
-                        <option value="BER">BER</option>
-                        <option value="FRA">FRA</option>
-                        <option value="MUC">MUC</option>
-                        <option value="HAM">HAM</option>
-                        <option value="DUS">DUS</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="climate-warning-banner" class="hidden text-[10px] bg-amber-50 text-amber-800 border border-amber-200 rounded-xl p-2 flex items-center space-x-1.5">
-                <i class="fas fa-info-circle text-amber-500"></i>
-                <span>Datum weit in der Zukunft. Es werden historische Saisondaten berechnet.</span>
-            </div>
-
-            <div id="spot-list-view" class="space-y-3 max-h-[420px] overflow-y-auto no-scrollbar pt-1"></div>
+  <div class="bg-slate-50 flex-1 px-4 py-6 space-y-4 rounded-t-3xl -mt-6 relative z-20 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+    <div id="spot-list-container" class="space-y-3">
+      <div class="flex items-center space-x-2">
+        <div class="relative flex items-center text-[11px] font-bold text-blue-600 bg-blue-50 border border-blue-100 rounded-xl px-3 py-1.5 hover:bg-blue-100/70 transition">
+          <i class="far fa-calendar-alt mr-1.5"></i>
+          <span id="weekend-label-display">Wochenende wählen...</span>
+          <input type="date" id="date-picker-input" class="absolute inset-0 opacity-0 cursor-pointer" />
         </div>
 
-        <div id="spot-detail-view" class="hidden bg-white p-5 rounded-3xl shadow-sm border border-gray-100 space-y-5">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h2 id="detail-name" class="text-2xl font-bold text-slate-800">--</h2>
-                    <p class="text-xs text-gray-500 mt-1 flex items-center">
-                        <span id="detail-flag" class="mr-1.5">🇵🇹</span>
-                        <span id="detail-sub">--</span>
-                    </p>
-                </div>
-                <div id="detail-score" class="text-white font-bold text-sm px-3 py-2 rounded-xl flex items-center justify-center">--%</div>
-            </div>
-
-            <div id="detail-data-source-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-lg inline-block"></div>
-
-            <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-2 -mx-1 px-1">
-                <div id="card-MO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
-                    <p id="label-mo" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">MO</p>
-                    <p id="wave-mo" class="text-sm font-black text-slate-800 mt-0.5">--</p>
-                    <p id="period-mo" class="text-[10px] text-gray-500">--</p>
-                    <p id="wind-mo" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
-                </div>
-                <div id="card-DI" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
-                    <p id="label-di" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">DI</p>
-                    <p id="wave-di" class="text-sm font-black text-slate-800 mt-0.5">--</p>
-                    <p id="period-di" class="text-[10px] text-gray-500">--</p>
-                    <p id="wind-di" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
-                </div>
-                <div id="card-MI" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
-                    <p id="label-mi" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">MI</p>
-                    <p id="wave-mi" class="text-sm font-black text-slate-800 mt-0.5">--</p>
-                    <p id="period-mi" class="text-[10px] text-gray-500">--</p>
-                    <p id="wind-mi" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
-                </div>
-                <div id="card-DO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
-                    <p id="label-do" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">DO</p>
-                    <p id="wave-do" class="text-sm font-black text-slate-800 mt-0.5">--</p>
-                    <p id="period-do" class="text-[10px] text-gray-500">--</p>
-                    <p id="wind-do" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
-                </div>
-                <div id="card-FR" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
-                    <p id="label-fr" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">FR</p>
-                    <p id="wave-fr" class="text-sm font-black text-slate-800 mt-0.5">--</p>
-                    <p id="period-fr" class="text-[10px] text-gray-500">--</p>
-                    <p id="wind-fr" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
-                </div>
-                <div id="card-SA" class="bg-blue-50 border-2 border-blue-500 rounded-2xl p-2.5 text-center min-w-[75px] flex-shrink-0 shadow-sm shadow-blue-50">
-                    <p id="label-sa" class="text-[9px] uppercase font-bold text-blue-500 tracking-wider">SA</p>
-                    <p id="wave-sa" class="text-sm font-black text-blue-900 mt-0.5">--</p>
-                    <p id="period-sa" class="text-[10px] text-blue-600 font-medium">--</p>
-                    <p id="wind-sa" class="text-[9px] text-blue-700 font-medium mt-0.5">--</p>
-                </div>
-                <div id="card-SO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
-                    <p id="label-so" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">SO</p>
-                    <p id="wave-so" class="text-sm font-black text-slate-800 mt-0.5">--</p>
-                    <p id="period-so" class="text-[10px] text-gray-500">--</p>
-                    <p id="wind-so" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
-                </div>
-            </div>
-
-            <div id="trip-info-box" class="text-xs text-slate-600 leading-relaxed bg-slate-50/50 p-3 rounded-xl border border-gray-100">
-                ✈️ <strong>Trip Info:</strong> Flüge nach <span id="detail-airport">---</span> ab <span id="detail-price">---</span> verfügbar.
-            </div>
-
-            <div class="space-y-2 pt-1">
-                <button id="flight-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-2xl transition shadow-md flex items-center justify-center text-sm">
-                    <span>Flüge & Mietwagen prüfen</span>
-                </button>
-                <button onclick="alert('Swell Alert aktiviert!')" class="w-full bg-white text-blue-600 font-bold py-3.5 px-4 rounded-2xl transition border-2 border-blue-600 text-sm">
-                    Swell Alert
-                </button>
-                <button onclick="showListView()" class="w-full text-center text-xs text-gray-400 pt-2 hover:text-slate-600 transition">
-                    <i class="fas fa-chevron-left mr-1"></i> Zurück zur Übersicht
-                </button>
-            </div>
+        <div class="flex items-center text-[11px] font-bold text-slate-600 bg-white border border-gray-200 rounded-xl px-2 py-1.5">
+          <i class="fas fa-plane-departure mr-1.5 text-gray-400"></i>
+          <select id="airport-selector" onchange="updateUI()" class="bg-transparent border-none outline-none cursor-pointer pr-1">
+            <option value="BER">BER</option>
+            <option value="FRA">FRA</option>
+            <option value="MUC">MUC</option>
+            <option value="HAM">HAM</option>
+            <option value="DUS">DUS</option>
+          </select>
         </div>
+      </div>
 
+      <div id="spot-list-view" class="space-y-3 max-h-[420px] overflow-y-auto no-scrollbar pt-1"></div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        const CARTO_API_KEY = 'cb1_3ku2_1_ae1f745b2653b404b3f5bffc';
-        const surfSpots = [
-            { id: 'ericeira', name: 'Ericeira', sub: 'Portugal', flag: '🇵🇹', airport: 'LIS', flightPrice: '124€', lat: 38.96, lng: -9.42, kontinent: 'Europa' },
-            { id: 'hossegor', name: 'Hossegor', sub: 'Frankreich', flag: '🇫🇷', airport: 'BIQ', flightPrice: '145€', lat: 43.66, lng: -1.44, kontinent: 'Europa' },
-            { id: 'peniche', name: 'Peniche', sub: 'Portugal', flag: '🇵🇹', airport: 'LIS', flightPrice: '119€', lat: 39.34, lng: -9.36, kontinent: 'Europa' },
-            { id: 'mundaka', name: 'Mundaka', sub: 'Spanien', flag: '🇪🇸', airport: 'BIO', flightPrice: '132€', lat: 43.40, lng: -2.69, kontinent: 'Europa' },
-            { id: 'jbay', name: 'Jeffreys Bay', sub: 'Südafrika', flag: '🇿🇦', airport: 'PLZ', flightPrice: '670€', lat: -34.02, lng: 24.92, kontinent: 'Afrika' },
-            { id: 'pipeline', name: 'Pipeline', sub: 'Hawaii', flag: '🇺🇸', airport: 'HNL', flightPrice: '890€', lat: 21.66, lng: -158.05, kontinent: 'Amerika' },
-            { id: 'uluwatu', name: 'Uluwatu', sub: 'Bali', flag: '🇮🇩', airport: 'DPS', flightPrice: '790€', lat: -8.81, lng: 115.08, kontinent: 'Asien' }
-        ];
+    <div id="spot-detail-view" class="hidden bg-white p-5 rounded-3xl shadow-sm border border-gray-100 space-y-5">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 id="detail-name" class="text-2xl font-bold text-slate-800">--</h2>
+          <p class="text-xs text-gray-500 mt-1 flex items-center">
+            <span id="detail-flag" class="mr-1.5">🇵🇹</span>
+            <span id="detail-sub">--</span>
+          </p>
+        </div>
+        <div id="detail-score" class="text-white font-bold text-sm px-3 py-2 rounded-xl flex items-center justify-center">--%</div>
+      </div>
 
-        const days = ['mo', 'di', 'mi', 'do', 'fr', 'sa', 'so'];
-        const liveForecastCache = {};
-        let map;
-        let mapMarkers = [];
-        let currentRegion = 'Europa';
-        let baseAnchorDate = new Date();
+      <div id="detail-data-source-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-lg inline-block"></div>
 
-        function getCardinalFromDegrees(deg) {
-            const compass = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
-            const normalized = ((deg % 360) + 360) % 360;
-            const index = Math.round(normalized / 22.5) % compass.length;
-            return compass[index];
+      <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-2 -mx-1 px-1">
+        <div id="card-MO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+          <p id="label-mo" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">MO</p>
+          <p id="wave-mo" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+          <p id="period-mo" class="text-[10px] text-gray-500">--</p>
+          <p id="wind-mo" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
+        </div>
+        <div id="card-DI" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+          <p id="label-di" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">DI</p>
+          <p id="wave-di" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+          <p id="period-di" class="text-[10px] text-gray-500">--</p>
+          <p id="wind-di" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
+        </div>
+        <div id="card-MI" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+          <p id="label-mi" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">MI</p>
+          <p id="wave-mi" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+          <p id="period-mi" class="text-[10px] text-gray-500">--</p>
+          <p id="wind-mi" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
+        </div>
+        <div id="card-DO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+          <p id="label-do" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">DO</p>
+          <p id="wave-do" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+          <p id="period-do" class="text-[10px] text-gray-500">--</p>
+          <p id="wind-do" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
+        </div>
+        <div id="card-FR" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+          <p id="label-fr" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">FR</p>
+          <p id="wave-fr" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+          <p id="period-fr" class="text-[10px] text-gray-500">--</p>
+          <p id="wind-fr" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
+        </div>
+        <div id="card-SA" class="bg-blue-50 border-2 border-blue-500 rounded-2xl p-2.5 text-center min-w-[75px] flex-shrink-0 shadow-sm shadow-blue-50">
+          <p id="label-sa" class="text-[9px] uppercase font-bold text-blue-500 tracking-wider">SA</p>
+          <p id="wave-sa" class="text-sm font-black text-blue-900 mt-0.5">--</p>
+          <p id="period-sa" class="text-[10px] text-blue-600 font-medium">--</p>
+          <p id="wind-sa" class="text-[9px] text-blue-700 font-medium mt-0.5">--</p>
+        </div>
+        <div id="card-SO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
+          <p id="label-so" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">SO</p>
+          <p id="wave-so" class="text-sm font-black text-slate-800 mt-0.5">--</p>
+          <p id="period-so" class="text-[10px] text-gray-500">--</p>
+          <p id="wind-so" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
+        </div>
+      </div>
+
+      <div id="trip-info-box" class="text-xs text-slate-600 leading-relaxed bg-slate-50/50 p-3 rounded-xl border border-gray-100">
+        ✈️ <strong>Trip Info:</strong> Flüge nach <span id="detail-airport">---</span> ab <span id="detail-price">---</span> verfügbar.
+      </div>
+
+      <div class="space-y-2 pt-1">
+        <button id="flight-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-2xl transition shadow-md flex items-center justify-center text-sm">
+          <span>Flüge & Mietwagen prüfen</span>
+        </button>
+        <button onclick="alert('Swell Alert aktiviert!')" class="w-full bg-white text-blue-600 font-bold py-3.5 px-4 rounded-2xl transition border-2 border-blue-600 text-sm">
+          Swell Alert
+        </button>
+        <button onclick="showListView()" class="w-full text-center text-xs text-gray-400 pt-2 hover:text-slate-600 transition">
+          <i class="fas fa-chevron-left mr-1"></i> Zurück zur Übersicht
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const CARTO_API_KEY = 'cb1_3ku2_1_ae1f745b2653b404b3f5bffc';
+
+    const surfSpots = [
+      { id: 'ericeira', name: 'Ericeira', sub: 'Portugal', flag: '🇵🇹', airport: 'LIS', flightPrice: '124€', lat: 38.96, lng: -9.42, kontinent: 'Europa' },
+      { id: 'hossegor', name: 'Hossegor', sub: 'Frankreich', flag: '🇫🇷', airport: 'BIQ', flightPrice: '145€', lat: 43.66, lng: -1.44, kontinent: 'Europa' },
+      { id: 'peniche', name: 'Peniche', sub: 'Portugal', flag: '🇵🇹', airport: 'LIS', flightPrice: '119€', lat: 39.34, lng: -9.36, kontinent: 'Europa' },
+      { id: 'mundaka', name: 'Mundaka', sub: 'Spanien', flag: '🇪🇸', airport: 'BIO', flightPrice: '132€', lat: 43.40, lng: -2.69, kontinent: 'Europa' },
+      { id: 'jbay', name: 'Jeffreys Bay', sub: 'Südafrika', flag: '🇿🇦', airport: 'PLZ', flightPrice: '670€', lat: -34.02, lng: 24.92, kontinent: 'Afrika' },
+      { id: 'pipeline', name: 'Pipeline', sub: 'Hawaii', flag: '🇺🇸', airport: 'HNL', flightPrice: '890€', lat: 21.66, lng: -158.05, kontinent: 'Amerika' },
+      { id: 'uluwatu', name: 'Uluwatu', sub: 'Bali', flag: '🇮🇩', airport: 'DPS', flightPrice: '790€', lat: -8.81, lng: 115.08, kontinent: 'Asien' }
+    ];
+
+    const days = ['mo', 'di', 'mi', 'do', 'fr', 'sa', 'so'];
+    const liveForecastCache = {};
+    let map;
+    let markersLayer;
+    let currentRegion = 'Europa';
+    let baseAnchorDate = new Date();
+
+    function getCardinalFromDegrees(deg) {
+      const compass = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+      const normalized = ((deg % 360) + 360) % 360;
+      const index = Math.round(normalized / 22.5) % compass.length;
+      return compass[index];
+    }
+
+    function getDisplayDates() {
+      const today = new Date(baseAnchorDate);
+      const friday = new Date(today);
+      const dayOfWeek = today.getDay();
+      let offset = (5 - dayOfWeek + 7) % 7;
+      if (offset === 0 && today.getHours() >= 15) offset = 7;
+      friday.setDate(today.getDate() + offset);
+
+      const labels = ['mo', 'di', 'mi', 'do', 'fr', 'sa', 'so'];
+      const result = {};
+      for (let i = -4; i <= 2; i++) {
+        const d = new Date(friday);
+        d.setDate(friday.getDate() + i);
+        const key = labels[(d.getDay() + 6) % 7];
+        result[key] = d.toISOString().split('T')[0];
+        result[`${key}Lbl`] = d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+      }
+      return result;
+    }
+
+    function scoreFromWave(wave) {
+      const h = Number(wave) || 1.5;
+      if (h >= 2.5) return 95;
+      if (h >= 1.8) return 85;
+      if (h >= 1.2) return 68;
+      return 45;
+    }
+
+    function getScoreConfig(score) {
+      if (score >= 80) return { bgClass: 'bg-green-500', markerColor: '#22c55e' };
+      if (score >= 60) return { bgClass: 'bg-orange-500', markerColor: '#f97316' };
+      return { bgClass: 'bg-red-500', markerColor: '#ef4444' };
+    }
+
+    function getFallbackDirection(spot, dayKey = 'sa') {
+      const base = { mo: 315, di: 300, mi: 285, do: 295, fr: 310, sa: 295, so: 280 };
+      const regionBase = {
+        Portugal: 300,
+        Frankreich: 310,
+        Spanien: 300,
+        'Südafrika': 220,
+        Hawaii: 60,
+        Bali: 260
+      };
+      const ori = regionBase[spot.sub] ?? 300;
+      const offset = base[dayKey] ?? 295;
+      return getCardinalFromDegrees(ori + (offset - 295));
+    }
+
+    function getExposureLabel(spot, direction) {
+      const facingMap = { Portugal: 'W', Frankreich: 'W', Spanien: 'W', 'Südafrika': 'SE', Hawaii: 'N', Bali: 'W' };
+      const facing = facingMap[spot.sub] || 'W';
+      const dir = direction;
+      const onshoreByFacing = {
+        W: ['W', 'WNW', 'WSW', 'NW', 'SW'],
+        E: ['E', 'ENE', 'ESE', 'NE', 'SE'],
+        N: ['N', 'NNE', 'NNW', 'NE', 'NW'],
+        SE: ['SE', 'SSE', 'ESE', 'S', 'E']
+      };
+      const offshoreByFacing = {
+        W: ['E', 'ENE', 'ESE', 'NE', 'SE'],
+        E: ['W', 'WNW', 'WSW', 'NW', 'SW'],
+        N: ['S', 'SSE', 'SSW', 'SE', 'SW'],
+        SE: ['W', 'WNW', 'NW', 'N', 'NNW']
+      };
+      if (onshoreByFacing[facing]?.includes(dir)) return 'Onshore';
+      if (offshoreByFacing[facing]?.includes(dir)) return 'Offshore';
+      return 'Side-on';
+    }
+
+    async function fetchForecastForSpot(spot, dates) {
+      const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period,wind_direction_10m&timezone=auto&start_date=${dates.mo}&end_date=${dates.so}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Fetch failed');
+      const data = await response.json();
+
+      const hourlyTime = data?.hourly?.time || [];
+      const waveArr = data?.hourly?.swell_wave_height || [];
+      const periodArr = data?.hourly?.swell_wave_peak_period || [];
+      const windArr = data?.hourly?.wind_direction_10m || [];
+      const result = {};
+
+      days.forEach(dayKey => {
+        const dateStr = dates[dayKey];
+        const indexes = hourlyTime.reduce((acc, time, idx) => {
+          if (time.startsWith(dateStr)) acc.push(idx);
+          return acc;
+        }, []);
+
+        if (!indexes.length) {
+          result[dateStr] = { wave: null, period: null, direction: getFallbackDirection(spot, dayKey) };
+          return;
         }
 
-        function getDisplayDates() {
-            const today = new Date();
-            const friday = new Date(today);
-            const dayOfWeek = today.getDay();
-            let offset = (5 - dayOfWeek + 7) % 7;
-            if (offset === 0 && today.getHours() >= 15) offset = 7;
-            friday.setDate(today.getDate() + offset);
+        const midIndex = indexes[Math.min(Math.floor(indexes.length / 2), indexes.length - 1)];
+        const wave = Number(waveArr[midIndex]);
+        const period = Number(periodArr[midIndex]);
+        const windDeg = Number(windArr[midIndex]);
 
-            const labels = ['mo', 'di', 'mi', 'do', 'fr', 'sa', 'so'];
-            const result = {};
-            for (let i = -4; i <= 2; i++) {
-                const d = new Date(friday);
-                d.setDate(friday.getDate() + i);
-                const key = labels[(d.getDay() + 6) % 7];
-                result[key] = d.toISOString().split('T')[0];
-                result[`${key}Lbl`] = d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
-            }
-            return result;
-        }
-
-        function getScoreConfig(score) {
-            if (score >= 80) return { bgClass: 'bg-green-500', markerColor: '#22c55e' };
-            if (score >= 60) return { bgClass: 'bg-orange-500', markerColor: '#f97316' };
-            return { bgClass: 'bg-red-500', markerColor: '#ef4444' };
-        }
-
-        function calculateDynamicScore(waveHeight) {
-            const height = Number(waveHeight) || 1.5;
-            if (height >= 2.5) return 95;
-            if (height >= 1.8) return 85;
-            if (height >= 1.2) return 68;
-            return 45;
-        }
-
-        function getWindDirectionFallback(spot, dayKey = 'sa') {
-            const base = { mo: 315, di: 300, mi: 285, do: 295, fr: 310, sa: 295, so: 280 };
-            const regionBase = { Portugal: 300, Frankreich: 310, Spanien: 300, 'Südafrika': 225, Hawaii: 60, Bali: 260 };
-            const ori = regionBase[spot.sub] ?? 300;
-            const offset = base[dayKey] ?? 295;
-            return getCardinalFromDegrees(ori + (offset - 295));
-        }
-
-        function getSpotFacing(spot) {
-            const map = { Portugal: 'W', Frankreich: 'W', Spanien: 'W', 'Südafrika': 'SE', Hawaii: 'N', Bali: 'W' };
-            return map[spot.sub] || 'W';
-        }
-
-        function directionToCompassKey(direction) {
-            const map = {
-                N: 'N', NNE: 'NNE', NE: 'NE', ENE: 'ENE',
-                E: 'E', ESE: 'ESE', SE: 'SE', SSE: 'SSE',
-                S: 'S', SSW: 'SSW', SW: 'SW', WSW: 'WSW',
-                W: 'W', WNW: 'WNW', NW: 'NW', NNW: 'NNW'
-            };
-            return map[direction] || 'W';
-        }
-
-        function getExposureLabel(spot, direction) {
-            const facing = getSpotFacing(spot);
-            const dir = directionToCompassKey(direction);
-            const onshoreByFacing = {
-                W: ['W', 'WNW', 'WSW', 'NW', 'SW'],
-                E: ['E', 'ENE', 'ESE', 'NE', 'SE'],
-                N: ['N', 'NNE', 'NNW', 'NE', 'NW'],
-                SE: ['SE', 'SSE', 'ESE', 'S', 'E']
-            };
-            const offshoreByFacing = {
-                W: ['E', 'ENE', 'ESE', 'NE', 'SE'],
-                E: ['W', 'WNW', 'WSW', 'NW', 'SW'],
-                N: ['S', 'SSE', 'SSW', 'SE', 'SW'],
-                SE: ['W', 'WNW', 'NW', 'N', 'NNW']
-            };
-
-            if (onshoreByFacing[facing]?.includes(dir)) return 'Onshore';
-            if (offshoreByFacing[facing]?.includes(dir)) return 'Offshore';
-            return 'Side-on';
-        }
-
-        function renderList() {
-            const dates = getDisplayDates();
-            const rows = surfSpots
-                .filter(spot => spot.kontinent === currentRegion)
-                .map(spot => {
-                    const forecast = liveForecastCache[spot.id];
-                    const dayData = forecast ? forecast[dates.sa] : null;
-                    const wave = dayData && dayData.wave != null ? dayData.wave : 1.5;
-                    return { spot, score: calculateDynamicScore(wave) };
-                })
-                .sort((a, b) => b.score - a.score);
-
-            const container = document.getElementById('spot-list-view');
-            container.innerHTML = rows.map(({ spot, score }) => `
-                <div onclick="showSpotDetail('${spot.id}')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center cursor-pointer hover:border-blue-300">
-                    <div>
-                        <h3 class="font-bold text-lg text-slate-800">${spot.name}</h3>
-                        <p class="text-xs text-gray-400 mt-0.5">${spot.flag} ${spot.sub}</p>
-                    </div>
-                    <div id="list-score-${spot.id}" class="${getScoreConfig(score).bgClass} text-white font-bold text-xs px-2.5 py-1.5 rounded-xl min-w-[42px] text-center">${score}%</div>
-                </div>
-            `).join('');
-
-            document.getElementById('weekend-label-display').innerText = `WE: ${dates.frLbl} bis ${dates.soLbl}`;
-        }
-
-        async function fetchForecastForSpot(spot, dates) {
-            const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period,wind_direction_10m&start_date=${dates.mo}&end_date=${dates.so}`;
-            const response = await fetch(url);
-            const data = await response.json();
-
-            const hourlyTime = data?.hourly?.time || [];
-            const waveData = data?.hourly?.swell_wave_height || [];
-            const periodData = data?.hourly?.swell_wave_peak_period || [];
-            const windData = data?.hourly?.wind_direction_10m || [];
-            const forecast = {};
-
-            days.forEach(dayKey => {
-                const dateStr = dates[dayKey];
-                const indexes = hourlyTime
-                    .map((time, idx) => (time.startsWith(dateStr) ? idx : -1))
-                    .filter(index => index >= 0);
-
-                if (indexes.length === 0) {
-                    forecast[dateStr] = { wave: null, period: null, direction: getWindDirectionFallback(spot, dayKey) };
-                    return;
-                }
-
-                const midIndex = indexes[Math.min(Math.floor(indexes.length / 2), indexes.length - 1)];
-                const wave = Number(waveData[midIndex]);
-                const period = Number(periodData[midIndex]);
-                const directionDeg = Number(windData[midIndex]);
-                forecast[dateStr] = {
-                    wave: Number.isFinite(wave) ? wave : null,
-                    period: Number.isFinite(period) ? period : null,
-                    direction: Number.isFinite(directionDeg) ? getCardinalFromDegrees(directionDeg) : getWindDirectionFallback(spot, dayKey)
-                };
-            });
-
-            return forecast;
-        }
-
-        async function refreshForecasts() {
-            const dates = getDisplayDates();
-            await Promise.all(surfSpots.map(async spot => {
-                try {
-                    liveForecastCache[spot.id] = await fetchForecastForSpot(spot, dates);
-                } catch (error) {
-                    console.warn('Forecast error', spot.name, error);
-                    liveForecastCache[spot.id] = { [dates.sa]: { wave: null, period: null, direction: getWindDirectionFallback(spot, 'sa') } };
-                }
-            }));
-            renderList();
-        }
-
-        async function showSpotDetail(spotId) {
-            const spot = surfSpots.find(entry => entry.id === spotId);
-            if (!spot) return;
-
-            document.getElementById('spot-list-container').classList.add('hidden');
-            document.getElementById('spot-detail-view').classList.remove('hidden');
-
-            document.getElementById('detail-name').innerText = spot.name;
-            document.getElementById('detail-flag').innerText = spot.flag;
-            document.getElementById('detail-sub').innerText = spot.sub;
-            document.getElementById('detail-airport').innerText = spot.airport;
-            document.getElementById('detail-price').innerText = spot.flightPrice;
-
-            const dates = getDisplayDates();
-            const airportSelector = document.getElementById('airport-selector');
-            const currentAirport = airportSelector ? airportSelector.value : 'BER';
-            document.getElementById('flight-btn').onclick = () => {
-                const url = `https://www.google.com/travel/flights?q=Flights%20to%20${spot.airport}%20from%20${currentAirport}%20on%20${dates.fr}%20through%20${dates.so}`;
-                window.open(url, '_blank');
-            };
-
-            const sourceBadge = document.getElementById('detail-data-source-badge');
-            sourceBadge.innerText = '🌐 Live Open-Meteo Winddaten';
-            sourceBadge.className = 'text-[10px] font-bold px-2.5 py-1 rounded-lg bg-blue-100 text-blue-800';
-
-            const forecastData = liveForecastCache[spot.id] || {};
-            let saturdayDirection = 'W';
-            let saWave = 1.5;
-
-            days.forEach(dayKey => {
-                const dateKey = dates[dayKey];
-                const dayValue = forecastData[dateKey] || { wave: null, period: null, direction: getWindDirectionFallback(spot, dayKey) };
-                const waveVal = dayValue.wave != null ? Number(dayValue.wave) : null;
-                const periodVal = dayValue.period != null ? Number(dayValue.period) : null;
-                const direction = dayValue.direction || getWindDirectionFallback(spot, dayKey);
-                const waveText = waveVal != null ? `${waveVal.toFixed(1)}m` : '--';
-                const periodText = periodVal != null ? `${Math.round(periodVal)}s` : '--';
-
-                document.getElementById(`wave-${dayKey}`).innerText = waveText;
-                document.getElementById(`period-${dayKey}`).innerText = periodText;
-                document.getElementById(`wind-${dayKey}`).innerText = direction;
-                document.getElementById(`wind-${dayKey}`).title = getExposureLabel(spot, direction);
-
-                if (dayKey === 'sa') {
-                    saturdayDirection = direction;
-                    if (waveVal != null) saWave = waveVal;
-                }
-            });
-
-            const score = calculateDynamicScore(saWave);
-            const scoreConfig = getScoreConfig(score);
-            document.getElementById('detail-score').innerText = `${score}%`;
-            document.getElementById('detail-score').className = `text-white font-bold text-sm px-3 py-2 rounded-xl ${scoreConfig.bgClass}`;
-
-            const tripInfo = document.getElementById('trip-info-box');
-            const exposure = getExposureLabel(spot, saturdayDirection);
-            tripInfo.innerHTML = `✈️ <strong>Trip Info:</strong> Flüge nach <span id="detail-airport">${spot.airport}</span> ab <span id="detail-price">${spot.flightPrice}</span> verfügbar. Wind: <strong>${saturdayDirection}</strong> • ${exposure}`;
-
-            days.forEach(dayKey => {
-                document.getElementById(`label-${dayKey}`).innerHTML = `${dayKey.toUpperCase()}<br><span class="text-[8px] font-normal block mt-0.5">${dates[`${dayKey}Lbl`]}</span>`;
-            });
-        }
-
-        function showListView() {
-            document.getElementById('spot-detail-view').classList.add('hidden');
-            document.getElementById('spot-list-container').classList.remove('hidden');
-        }
-
-        function filterRegion(regionName) {
-            currentRegion = regionName;
-            showListView();
-            renderList();
-        }
-
-        function updateUI() {
-            const dates = getDisplayDates();
-            document.getElementById('weekend-label-display').innerText = `WE: ${dates.frLbl} bis ${dates.soLbl}`;
-
-            ['Europa', 'Afrika', 'Amerika', 'Asien'].forEach(region => {
-                const button = document.getElementById(`btn-${region}`);
-                if (button) {
-                    button.className = region === currentRegion
-                        ? 'bg-blue-600 text-white font-bold text-sm px-5 py-2 rounded-full transition shadow-sm'
-                        : 'bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200';
-                }
-            });
-
-            renderList();
-        }
-
-        function initMap() {
-            map = L.map('map', { zoomControl: false }).setView([41.5, -5.5], 5);
-            L.tileLayer(`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`).addTo(map);
-            document.getElementById('date-picker-input').addEventListener('change', e => {
-                if (e.target.value) {
-                    baseAnchorDate = new Date(e.target.value);
-                    updateUI();
-                }
-            });
-            updateUI();
-        }
-
-        window.onload = () => {
-            initMap();
-            refreshForecasts();
+        result[dateStr] = {
+          wave: Number.isFinite(wave) ? wave : null,
+          period: Number.isFinite(period) ? period : null,
+          direction: Number.isFinite(windDeg) ? getCardinalFromDegrees(windDeg) : getFallbackDirection(spot, dayKey)
         };
-    </script>
+      });
+
+      return result;
+    }
+
+    async function refreshForecasts() {
+      const dates = getDisplayDates();
+      await Promise.all(surfSpots.map(async (spot) => {
+        try {
+          liveForecastCache[spot.id] = await fetchForecastForSpot(spot, dates);
+        } catch (error) {
+          liveForecastCache[spot.id] = {
+            [dates.sa]: { wave: 1.5, period: 12, direction: getFallbackDirection(spot, 'sa') }
+          };
+        }
+      }));
+      renderList();
+      renderMarkers();
+    }
+
+    function computeSummaryForSpot(spot, dates) {
+      const dayData = liveForecastCache[spot.id]?.[dates.sa] || { wave: 1.5, period: 12, direction: getFallbackDirection(spot, 'sa') };
+      const wave = Number(dayData.wave ?? 1.5);
+      const period = Number(dayData.period ?? 12);
+      const direction = dayData.direction || getFallbackDirection(spot, 'sa');
+      const score = scoreFromWave(wave);
+      return { score, wave, period, direction };
+    }
+
+    function renderList() {
+      const dates = getDisplayDates();
+      const filtered = surfSpots.filter(spot => spot.kontinent === currentRegion);
+      const sorted = filtered
+        .map(spot => ({ spot, summary: computeSummaryForSpot(spot, dates) }))
+        .sort((a, b) => b.summary.score - a.summary.score);
+
+      document.getElementById('weekend-label-display').textContent = `WE: ${dates.frLbl} bis ${dates.soLbl}`;
+      document.getElementById('spot-list-view').innerHTML = sorted.map(({ spot, summary }) => `
+        <div onclick="showSpotDetail('${spot.id}')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center cursor-pointer hover:border-blue-300">
+          <div>
+            <h3 class="font-bold text-lg text-slate-800">${spot.name}</h3>
+            <p class="text-xs text-gray-400 mt-0.5">${spot.flag} ${spot.sub}</p>
+          </div>
+          <div class="${getScoreConfig(summary.score).bgClass} text-white font-bold text-xs px-2.5 py-1.5 rounded-xl min-w-[42px] text-center">${summary.score}%</div>
+        </div>
+      `).join('');
+    }
+
+    function renderMarkers() {
+      if (!markersLayer) return;
+      markersLayer.clearLayers();
+
+      const dates = getDisplayDates();
+      const filtered = surfSpots.filter(spot => spot.kontinent === currentRegion);
+
+      filtered.forEach(spot => {
+        const summary = computeSummaryForSpot(spot, dates);
+        const config = getScoreConfig(summary.score);
+
+        const marker = L.circleMarker([spot.lat, spot.lng], {
+          radius: 9,
+          color: 'white',
+          weight: 2,
+          fillColor: config.markerColor,
+          fillOpacity: 1
+        }).addTo(markersLayer);
+
+        marker.bindPopup(`<div class="text-sm"><strong>${spot.name}</strong><br>${spot.sub}<br>Score: ${summary.score}%<br>Welle: ${summary.wave.toFixed(1)}m<br>Periode: ${Math.round(summary.period)}s</div>`);
+        marker.on('click', () => showSpotDetail(spot.id));
+      });
+    }
+
+    async function showSpotDetail(spotId) {
+      const spot = surfSpots.find(s => s.id === spotId);
+      if (!spot) return;
+
+      document.getElementById('spot-list-container').classList.add('hidden');
+      document.getElementById('spot-detail-view').classList.remove('hidden');
+
+      document.getElementById('detail-name').textContent = spot.name;
+      document.getElementById('detail-flag').textContent = spot.flag;
+      document.getElementById('detail-sub').textContent = spot.sub;
+      document.getElementById('detail-airport').textContent = spot.airport;
+      document.getElementById('detail-price').textContent = spot.flightPrice;
+
+      if (map) map.flyTo([spot.lat, spot.lng], 7, { duration: 1.2 });
+
+      const dates = getDisplayDates();
+      const forecast = liveForecastCache[spot.id] || {};
+      const dataByDay = {};
+      days.forEach(dayKey => {
+        const dateKey = dates[dayKey];
+        dataByDay[dayKey] = forecast[dateKey] || { wave: 1.5, period: 12, direction: getFallbackDirection(spot, dayKey) };
+      });
+
+      days.forEach(dayKey => {
+        const item = dataByDay[dayKey];
+        const waveValue = Number(item.wave ?? 1.5);
+        const periodValue = Number(item.period ?? 12);
+        const direction = item.direction || getFallbackDirection(spot, dayKey);
+        document.getElementById(`wave-${dayKey}`).textContent = `${waveValue.toFixed(1)}m`;
+        document.getElementById(`period-${dayKey}`).textContent = `${Math.round(periodValue)}s`;
+        document.getElementById(`wind-${dayKey}`).textContent = direction;
+        document.getElementById(`label-${dayKey}`).innerHTML = `${dayKey.toUpperCase()}<br><span class="text-[8px] font-normal block mt-0.5">${dates[`${dayKey}Lbl`]}</span>`;
+      });
+
+      const saWave = Number(dataByDay.sa.wave ?? 1.5);
+      const score = scoreFromWave(saWave);
+      const scoreConfig = getScoreConfig(score);
+      const scoreEl = document.getElementById('detail-score');
+      scoreEl.textContent = `${score}%`;
+      scoreEl.className = `text-white font-bold text-sm px-3 py-2 rounded-xl ${scoreConfig.bgClass}`;
+
+      const tripInfo = document.getElementById('trip-info-box');
+      const exposure = getExposureLabel(spot, dataByDay.sa.direction || getFallbackDirection(spot, 'sa'));
+      tripInfo.innerHTML = `✈️ <strong>Trip Info:</strong> Flüge nach <span id="detail-airport">${spot.airport}</span> ab <span id="detail-price">${spot.flightPrice}</span> verfügbar. Wind: <strong>${dataByDay.sa.direction || getFallbackDirection(spot, 'sa')}</strong> • ${exposure}`;
+
+      document.getElementById('detail-data-source-badge').textContent = '🌐 Live Open-Meteo';
+      document.getElementById('detail-data-source-badge').className = 'text-[10px] font-bold px-2.5 py-1 rounded-lg bg-blue-100 text-blue-800';
+
+      document.getElementById('flight-btn').onclick = () => {
+        const airport = document.getElementById('airport-selector').value;
+        const url = `https://www.google.com/travel/flights?q=Flights%20to%20${spot.airport}%20from%20${airport}%20on%20${dates.fr}%20through%20${dates.so}`;
+        window.open(url, '_blank');
+      };
+    }
+
+    function showListView() {
+      document.getElementById('spot-detail-view').classList.add('hidden');
+      document.getElementById('spot-list-container').classList.remove('hidden');
+      if (currentRegion === 'Europa') map.flyTo([41.5, -5.5], 4);
+      if (currentRegion === 'Afrika') map.flyTo([12.0, 10.0], 3);
+      if (currentRegion === 'Amerika') map.flyTo([20.0, -90.0], 3);
+      if (currentRegion === 'Asien') map.flyTo([5.0, 110.0], 3);
+    }
+
+    function updateUI() {
+      const dates = getDisplayDates();
+      document.getElementById('weekend-label-display').textContent = `WE: ${dates.frLbl} bis ${dates.soLbl}`;
+
+      ['Europa', 'Afrika', 'Amerika', 'Asien'].forEach(region => {
+        const btn = document.getElementById(`btn-${region}`);
+        if (btn) {
+          btn.className = region === currentRegion
+            ? 'bg-blue-600 text-white font-bold text-sm px-5 py-2 rounded-full transition shadow-sm'
+            : 'bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200';
+        }
+      });
+
+      renderList();
+      renderMarkers();
+    }
+
+    function filterRegion(regionName) {
+      currentRegion = regionName;
+      showListView();
+      updateUI();
+    }
+
+    function initMap() {
+      map = L.map('map', { zoomControl: false }).setView([41.5, -5.5], 4);
+      L.tileLayer(`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`).addTo(map);
+      markersLayer = L.layerGroup().addTo(map);
+
+      document.getElementById('date-picker-input').addEventListener('change', (event) => {
+        if (event.target.value) {
+          baseAnchorDate = new Date(event.target.value);
+          refreshForecasts();
+        }
+      });
+
+      updateUI();
+      refreshForecasts();
+    }
+
+    window.onload = initMap;
+  </script>
 </body>
 </html>
