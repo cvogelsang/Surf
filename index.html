@@ -91,36 +91,43 @@
                     <p id="label-mo" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">MO</p>
                     <p id="wave-mo" class="text-sm font-black text-slate-800 mt-0.5">--</p>
                     <p id="period-mo" class="text-[10px] text-gray-500">--</p>
+                    <p id="wind-mo" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
                 </div>
                 <div id="card-DI" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
                     <p id="label-di" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">DI</p>
                     <p id="wave-di" class="text-sm font-black text-slate-800 mt-0.5">--</p>
                     <p id="period-di" class="text-[10px] text-gray-500">--</p>
+                    <p id="wind-di" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
                 </div>
                 <div id="card-MI" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
                     <p id="label-mi" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">MI</p>
                     <p id="wave-mi" class="text-sm font-black text-slate-800 mt-0.5">--</p>
                     <p id="period-mi" class="text-[10px] text-gray-500">--</p>
+                    <p id="wind-mi" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
                 </div>
                 <div id="card-DO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
                     <p id="label-do" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">DO</p>
                     <p id="wave-do" class="text-sm font-black text-slate-800 mt-0.5">--</p>
                     <p id="period-do" class="text-[10px] text-gray-500">--</p>
+                    <p id="wind-do" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
                 </div>
                 <div id="card-FR" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
                     <p id="label-fr" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">FR</p>
                     <p id="wave-fr" class="text-sm font-black text-slate-800 mt-0.5">--</p>
                     <p id="period-fr" class="text-[10px] text-gray-500">--</p>
+                    <p id="wind-fr" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
                 </div>
                 <div id="card-SA" class="bg-blue-50 border-2 border-blue-500 rounded-2xl p-2.5 text-center min-w-[75px] flex-shrink-0 shadow-sm shadow-blue-50">
                     <p id="label-sa" class="text-[9px] uppercase font-bold text-blue-500 tracking-wider">SA</p>
                     <p id="wave-sa" class="text-sm font-black text-blue-900 mt-0.5">--</p>
                     <p id="period-sa" class="text-[10px] text-blue-600 font-medium">--</p>
+                    <p id="wind-sa" class="text-[9px] text-blue-700 font-medium mt-0.5">--</p>
                 </div>
                 <div id="card-SO" class="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 text-center min-w-[70px] flex-shrink-0">
                     <p id="label-so" class="text-[9px] uppercase font-bold text-gray-400 tracking-wider">SO</p>
                     <p id="wave-so" class="text-sm font-black text-slate-800 mt-0.5">--</p>
                     <p id="period-so" class="text-[10px] text-gray-500">--</p>
+                    <p id="wind-so" class="text-[9px] text-cyan-600 font-medium mt-0.5">--</p>
                 </div>
             </div>
 
@@ -145,12 +152,8 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // CARTO API Key
         const CARTO_API_KEY = 'cb1_3ku2_1_ae1f745b2653b404b3f5bffc';
-
-        // Datenbank mit korrigierten, realistischen Premium-Swells (Perioden angehoben)
         const surfSpots = [
-            // EUROPA (42 Spots)
             { id: "ericeira", name: "Ericeira", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "124€", lat: 38.96, lng: -9.42, kontinent: "Europa", campInfo: "Samstag bringt saubere Wellen", defaultForecast: { sa: 1.8, p: 14 } },
             { id: "hossegor", name: "Hossegor", sub: "Frankreich", flag: "🇫🇷", airport: "BIQ", flightPrice: "145€", lat: 43.66, lng: -1.44, kontinent: "Europa", campInfo: "Starker Beachbreak zum Lernen", defaultForecast: { sa: 1.8, p: 14 } },
             { id: "peniche", name: "Peniche", sub: "Portugal", flag: "🇵🇹", airport: "LIS", flightPrice: "119€", lat: 39.34, lng: -9.36, kontinent: "Europa", campInfo: "Supertubos läuft hohl", defaultForecast: { sa: 1.8, p: 14 } },
@@ -194,19 +197,13 @@
             { id: "jardim-mar", name: "Jardim do Mar", sub: "Madeira", flag: "🇵🇹", airport: "FNC", flightPrice: "198€", lat: 32.74, lng: -17.22, kontinent: "Europa", campInfo: "Portugiesische Atlantik-Kaps", defaultForecast: { sa: 2.0, p: 15 } },
             { id: "levanto", name: "Levanto", sub: "Italien", flag: "🇮🇹", airport: "GOA", flightPrice: "176€", lat: 44.19, lng: 9.61, kontinent: "Europa", campInfo: "Mittelmeer-Beachbreak mit viel Form", defaultForecast: { sa: 1.6, p: 12 } },
             { id: "varazze", name: "Varazze", sub: "Italien", flag: "🇮🇹", airport: "GOA", flightPrice: "176€", lat: 44.31, lng: 8.61, kontinent: "Europa", campInfo: "Ligurische Riviera-Klacks", defaultForecast: { sa: 1.6, p: 12 } },
-
-            // AFRIKA
             { id: "anchors", name: "Taghazout", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.54, lng: -9.71, kontinent: "Afrika", campInfo: "Endlose rechte Points und Longwalls", defaultForecast: { sa: 2.2, p: 15 } },
             { id: "imsouane", name: "Imsouane", sub: "Marokko", flag: "🇲🇦", airport: "AGA", flightPrice: "189€", lat: 30.84, lng: -9.82, kontinent: "Afrika", campInfo: "Die längste Welle Marokkos", defaultForecast: { sa: 2.1, p: 14 } },
             { id: "jbay", name: "Jeffreys Bay", sub: "Südafrika", flag: "🇿🇦", airport: "PLZ", flightPrice: "670€", lat: -34.02, lng: 24.92, kontinent: "Afrika", campInfo: "Die legendärste rechte Welle Afrikas", defaultForecast: { sa: 2.6, p: 17 } },
             { id: "dakar", name: "Ngor Right", sub: "Senegal", flag: "🇸🇳", airport: "DSS", flightPrice: "410€", lat: 14.75, lng: -17.51, kontinent: "Afrika", campInfo: "Konstantes Riffkinn mit viel Power", defaultForecast: { sa: 2.0, p: 14 } },
-
-            // AMERIKA
             { id: "pipeline", name: "Pipeline", sub: "Hawaii, USA", flag: "🇺🇸", airport: "HNL", flightPrice: "890€", lat: 21.66, lng: -158.05, kontinent: "Amerika", campInfo: "Die hohlste und wildeste Welle der Welt", defaultForecast: { sa: 2.8, p: 18 } },
             { id: "malibu", name: "Malibu", sub: "Kalifornien, USA", flag: "🇺🇸", airport: "LAX", flightPrice: "490€", lat: 34.03, lng: -118.67, kontinent: "Amerika", campInfo: "Klassische Pointbreaks und lange Lines", defaultForecast: { sa: 1.8, p: 13 } },
             { id: "chicama", name: "Chicama", sub: "Peru", flag: "🇵🇪", airport: "TRU", flightPrice: "820€", lat: -7.70, lng: -79.43, kontinent: "Amerika", campInfo: "Die längste linke Welle der Welt", defaultForecast: { sa: 2.5, p: 16 } },
-
-            // ASIEN
             { id: "uluwatu", name: "Uluwatu", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.08, kontinent: "Asien", campInfo: "Konstanter, schneidender Reefbreak", defaultForecast: { sa: 2.1, p: 15 } },
             { id: "padang", name: "Padang Padang", sub: "Bali, Indonesien", flag: "🇮🇩", airport: "DPS", flightPrice: "790€", lat: -8.81, lng: 115.10, kontinent: "Asien", campInfo: "Die perfekte Welle im perfekten Rahmen", defaultForecast: { sa: 2.2, p: 15 } },
             { id: "siargao", name: "Cloud 9", sub: "Philippinen", flag: "🇵🇭", airport: "IAO", flightPrice: "880€", lat: 9.81, lng: 126.16, kontinent: "Asien", campInfo: "Heftige Barrels direkt am Kanal", defaultForecast: { sa: 2.3, p: 15 } }
@@ -227,18 +224,14 @@
         function getCalculatedWeekDays() {
             const current = new Date(baseAnchorDate);
             const currentDay = current.getDay();
-            
             let distanceToFriday = (5 - currentDay + 7) % 7;
             if (distanceToFriday === 0 && current.getHours() >= 15 && !document.getElementById('date-picker-input').value) {
                 distanceToFriday = 7;
             }
-            
             const fridayDate = new Date(current);
             fridayDate.setDate(current.getDate() + distanceToFriday);
-
             const weekDates = {};
             const labels = ["mo", "di", "mi", "do", "fr", "sa", "so"];
-            
             for(let i = -4; i <= 2; i++) {
                 const d = new Date(fridayDate);
                 d.setDate(fridayDate.getDate() + i);
@@ -267,26 +260,35 @@
             return 45;
         }
 
+        function getWindDirectionLabel(deg) {
+            if (deg == null || Number.isNaN(Number(deg))) return '--';
+            const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+            const normalized = ((Number(deg) % 360) + 360) % 360;
+            const index = Math.round(normalized / 45) % 8;
+            return directions[index];
+        }
+
+        function windSpeedKmh(speedMps) {
+            const value = Number(speedMps);
+            if (!Number.isFinite(value)) return null;
+            return Math.round(value * 3.6);
+        }
+
         function getDayForecastForSpot(spot, dates, fallbackDateKey = 'sa') {
             const liveData = liveForecastCache[spot.id];
             if (!liveData || liveData.source !== 'live') {
                 return null;
             }
-
             const dayKey = dates[fallbackDateKey] || fallbackDateKey;
             const dayForecast = liveData[dayKey] || null;
-
             if (!dayForecast || dayForecast.wave == null || dayForecast.period == null) {
                 return null;
             }
-
             const waveHeight = Number(dayForecast.wave);
             const period = Number(dayForecast.period);
-
             if (!Number.isFinite(waveHeight) || !Number.isFinite(period)) {
                 return null;
             }
-
             return {
                 score: calculateDynamicScore(waveHeight),
                 waveHeight,
@@ -296,13 +298,14 @@
         }
 
         async function fetchForecastForSpot(spot, dates) {
-            const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period&start_date=${dates.mo}&end_date=${dates.so}&timezone=auto`;
+            const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=swell_wave_height,swell_wave_peak_period,wind_speed_10m,wind_direction_10m&start_date=${dates.mo}&end_date=${dates.so}&timezone=auto`;
             const response = await fetch(url);
             const data = await response.json();
-
             const hourlyTime = data?.hourly?.time || [];
             const hourlyWave = data?.hourly?.swell_wave_height || [];
             const hourlyPeriod = data?.hourly?.swell_wave_peak_period || [];
+            const hourlyWindSpeed = data?.hourly?.wind_speed_10m || [];
+            const hourlyWindDirection = data?.hourly?.wind_direction_10m || [];
             const dailyForecast = {};
 
             ["mo", "di", "mi", "do", "fr", "sa", "so"].forEach(dayKey => {
@@ -312,16 +315,21 @@
                     .filter(index => index >= 0);
 
                 if (dayIndices.length === 0) {
-                    dailyForecast[dateStr] = { wave: null, period: null };
+                    dailyForecast[dateStr] = { wave: null, period: null, windSpeed: null, windDirection: null };
                     return;
                 }
 
                 const midIndex = dayIndices[Math.min(Math.floor(dayIndices.length / 2), dayIndices.length - 1)];
                 const wave = Number(hourlyWave[midIndex]);
                 const period = Number(hourlyPeriod[midIndex]);
+                const windSpeed = Number(hourlyWindSpeed[midIndex]);
+                const windDirection = Number(hourlyWindDirection[midIndex]);
+
                 dailyForecast[dateStr] = {
                     wave: Number.isFinite(wave) ? wave : null,
-                    period: Number.isFinite(period) ? period : null
+                    period: Number.isFinite(period) ? period : null,
+                    windSpeed: Number.isFinite(windSpeed) ? windSpeedKmh(windSpeed) : null,
+                    windDirection: Number.isFinite(windDirection) ? windDirection : null
                 };
             });
 
@@ -333,27 +341,24 @@
                 Object.keys(liveForecastCache).forEach(key => delete liveForecastCache[key]);
                 return;
             }
-
             const dates = getCalculatedWeekDays();
             const filtered = surfSpots.filter(s => s.kontinent === currentRegion);
-
             await Promise.all(filtered.map(async (spot) => {
                 try {
                     const dailyForecast = await fetchForecastForSpot(spot, dates);
                     const saDate = dates.sa;
                     liveForecastCache[spot.id] = {
                         source: 'live',
-                        [saDate]: dailyForecast[saDate] || { wave: null, period: null },
+                        [saDate]: dailyForecast[saDate] || { wave: null, period: null, windSpeed: null, windDirection: null },
                         ...Object.fromEntries(Object.entries(dailyForecast).map(([dateKey, value]) => [dateKey, value]))
                     };
                 } catch (error) {
                     liveForecastCache[spot.id] = {
                         source: 'fallback',
-                        [dates.sa]: { wave: null, period: null }
+                        [dates.sa]: { wave: null, period: null, windSpeed: null, windDirection: null }
                     };
                 }
             }));
-
             renderSpotList();
         }
 
@@ -390,7 +395,6 @@
                 const scoreConfig = getScoreConfig(summary.score);
                 const markerColor = scoreConfig.markerColor;
                 const bgScoreClass = scoreConfig.bgClass;
-
                 const customIcon = L.divIcon({
                     className: 'custom-marker',
                     html: `<div style="background-color: ${markerColor}; width: 14px; height: 14px; border-radius: 50%; border: 2.5px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></div>`,
@@ -423,43 +427,33 @@
         function initMap() {
             map = L.map('map', { zoomControl: false }).setView([41.5, -5.5], 5);
             L.tileLayer(`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`).addTo(map);
-            
             document.getElementById('date-picker-input').addEventListener('change', (e) => {
                 if (e.target.value) {
                     baseAnchorDate = new Date(e.target.value);
                     updateUI();
                 }
             });
-
             updateUI();
         }
 
         async function updateUI() {
             const dates = getCalculatedWeekDays();
             document.getElementById('weekend-label-display').innerText = `WE: ${dates.frLbl} bis ${dates.soLbl}`;
-
             const banner = document.getElementById('climate-warning-banner');
             if (isFutureClimateMode()) banner.classList.remove('hidden');
             else banner.classList.add('hidden');
-
             ["Europa", "Afrika", "Amerika", "Asien"].forEach(reg => {
                 const btn = document.getElementById(`btn-${reg}`);
                 if(btn) {
-                    btn.className = reg === currentRegion 
-                        ? "bg-blue-600 text-white font-bold text-sm px-5 py-2 rounded-full transition shadow-sm" 
-                        : "bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200";
+                    btn.className = reg === currentRegion ? "bg-blue-600 text-white font-bold text-sm px-5 py-2 rounded-full transition shadow-sm" : "bg-slate-100 text-blue-900 font-bold text-sm px-5 py-2 rounded-full hover:bg-slate-200";
                 }
             });
-
             mapMarkers.forEach(obj => map.removeLayer(obj.marker));
             mapMarkers = [];
-
             renderSpotList();
-
             if (!isFutureClimateMode()) {
                 await refreshRegionForecasts();
             }
-
             if (currentRegion === "Europa") map.flyTo([41.5, -5.5], 4);
             if (currentRegion === "Afrika") map.flyTo([12.0, 10.0], 3);
             if (currentRegion === "Amerika") map.flyTo([20.0, -90.0], 3);
@@ -476,12 +470,10 @@
             if (isFutureClimateMode()) {
                 return null;
             }
-
             const cached = liveForecastCache[spot.id];
             if (cached && cached.source === 'live') {
                 return cached;
             }
-
             try {
                 const dailyForecast = await fetchForecastForSpot(spot, dates);
                 const updatedData = {
@@ -493,7 +485,7 @@
             } catch (error) {
                 liveForecastCache[spot.id] = {
                     source: 'fallback',
-                    [dates.sa]: { wave: null, period: null }
+                    [dates.sa]: { wave: null, period: null, windSpeed: null, windDirection: null }
                 };
                 return liveForecastCache[spot.id];
             }
@@ -502,27 +494,21 @@
         async function showSpotDetail(spotId) {
             const spot = surfSpots.find(s => s.id === spotId);
             if (!spot) return;
-
             document.getElementById('spot-list-container').classList.add('hidden');
             document.getElementById('spot-detail-view').classList.remove('hidden');
-
             document.getElementById('detail-name').innerText = spot.name;
             document.getElementById('detail-flag').innerText = spot.flag;
             document.getElementById('detail-sub').innerText = spot.sub;
             document.getElementById('detail-airport').innerText = spot.airport;
             document.getElementById('detail-price').innerText = spot.flightPrice;
             document.getElementById('detail-camp').innerText = spot.campInfo;
-
             map.flyTo([spot.lat, spot.lng], 7, { duration: 1 });
-
             const dates = getCalculatedWeekDays();
             const selectedAirport = document.getElementById('airport-selector').value;
             const days = ["mo", "di", "mi", "do", "fr", "sa", "so"];
-
             days.forEach(d => {
                 document.getElementById(`label-${d}`).innerHTML = `${d.toUpperCase()}<br><span class="text-[8px] font-normal block mt-0.5">${dates[d + "Lbl"]}</span>`;
             });
-
             document.getElementById('flight-btn').onclick = () => {
                 const url = `https://www.google.com/travel/flights?q=Flights%20to%20${spot.airport}%20from%20${selectedAirport}%20on%20${dates.fr}%20through%20${dates.so}`;
                 window.open(url, '_blank');
@@ -534,12 +520,11 @@
             if (isFutureClimateMode()) {
                 sourceBadge.innerText = "⚠️ Keine Live-Forecasts für dieses Datum";
                 sourceBadge.className = "text-[10px] font-bold px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800";
-
                 days.forEach(d => {
                     document.getElementById(`wave-${d}`).innerText = "--";
                     document.getElementById(`period-${d}`).innerText = "--";
+                    document.getElementById(`wind-${d}`).innerText = "--";
                 });
-
                 scoreBadge.innerText = "--%";
                 scoreBadge.className = "text-white font-bold text-sm px-3 py-2 rounded-xl bg-slate-400";
                 return;
@@ -547,7 +532,6 @@
 
             sourceBadge.innerText = "🌐 Live OpenSea Ocean-Forecast";
             sourceBadge.className = "text-[10px] font-bold px-2.5 py-1 rounded-lg bg-blue-100 text-blue-800";
-
             const forecastData = await ensureSpotForecast(spot, dates);
             const activeForecast = forecastData || {};
             let saWaveHeight = null;
@@ -557,6 +541,8 @@
                 const dayValue = activeForecast[dateKey];
                 const waveValue = dayValue && dayValue.wave != null ? Number(dayValue.wave) : null;
                 const periodValue = dayValue && dayValue.period != null ? Number(dayValue.period) : null;
+                const windValue = dayValue && dayValue.windSpeed != null ? Number(dayValue.windSpeed) : null;
+                const windDirection = dayValue && dayValue.windDirection != null ? Number(dayValue.windDirection) : null;
 
                 if (waveValue != null) {
                     document.getElementById(`wave-${d}`).innerText = `${waveValue.toFixed(1)}m`;
@@ -569,6 +555,12 @@
                     document.getElementById(`period-${d}`).innerText = `${Math.round(periodValue)}s`;
                 } else {
                     document.getElementById(`period-${d}`).innerText = "--";
+                }
+
+                if (windValue != null && windDirection != null) {
+                    document.getElementById(`wind-${d}`).innerText = `${windValue} km/h ${getWindDirectionLabel(windDirection)}`;
+                } else {
+                    document.getElementById(`wind-${d}`).innerText = "--";
                 }
             });
 
