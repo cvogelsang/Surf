@@ -221,6 +221,33 @@
             return { bgClass: 'bg-red-500', markerColor: '#ef4444' };
         }
 
+        function getDirectionLabel(degrees) {
+            const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+            const normalized = ((degrees % 360) + 360) % 360;
+            const index = Math.round(normalized / 45) % directions.length;
+            return directions[index];
+        }
+
+        function getWindDirectionForSpot(spot, dayKey = 'sa') {
+            const offsets = { mo: -8, di: -4, mi: 0, do: 8, fr: 10, sa: 0, so: -5 };
+            let baseDirection = 295;
+
+            if (spot.kontinent === 'Afrika') baseDirection = 220;
+            if (spot.kontinent === 'Amerika') baseDirection = 45;
+            if (spot.kontinent === 'Asien') baseDirection = 260;
+            if (spot.kontinent === 'Europa') {
+                if (spot.sub.includes('Portugal') || spot.sub.includes('Frankreich')) baseDirection = 300;
+                else if (spot.sub.includes('Irland') || spot.sub.includes('Schottland') || spot.sub.includes('Wales') || spot.sub.includes('Großbritannien')) baseDirection = 280;
+                else if (spot.sub.includes('Spanien') || spot.sub.includes('Italien')) baseDirection = 310;
+            }
+
+            if (spot.name.toLowerCase().includes('pipeline') || spot.name.toLowerCase().includes('chicama')) baseDirection = 60;
+            if (spot.name.toLowerCase().includes('jbay') || spot.name.toLowerCase().includes('jeffreys')) baseDirection = 220;
+            if (spot.kontinent === 'Asien' && spot.sub.includes('Bali')) baseDirection = 260;
+
+            return getDirectionLabel(baseDirection + (offsets[dayKey] || 0));
+        }
+
         function getCalculatedWeekDays() {
             const current = new Date(baseAnchorDate);
             const currentDay = current.getDay();
@@ -274,6 +301,7 @@
                     waveHeight: spot.defaultForecast.sa,
                     period: spot.defaultForecast.p,
                     wind: computeWindFromWave(spot.defaultForecast.sa),
+                    direction: getWindDirectionForSpot(spot, fallbackDateKey),
                     source: 'historical'
                 };
             }
@@ -284,6 +312,7 @@
             const waveHeight = dayForecast && dayForecast.wave != null ? dayForecast.wave : spot.defaultForecast.sa;
             const period = dayForecast && dayForecast.period != null ? dayForecast.period : spot.defaultForecast.p;
             const wind = dayForecast && dayForecast.wind != null ? dayForecast.wind : computeWindFromWave(waveHeight);
+            const direction = dayForecast && dayForecast.direction ? dayForecast.direction : getWindDirectionForSpot(spot, fallbackDateKey);
             const score = calculateDynamicScore(waveHeight);
 
             return {
@@ -291,6 +320,7 @@
                 waveHeight,
                 period,
                 wind,
+                direction,
                 source: liveData.source || 'live'
             };
         }
@@ -312,7 +342,7 @@
                     .filter(index => index >= 0);
 
                 if (dayIndices.length === 0) {
-                    dailyForecast[dateStr] = { wave: null, period: null, wind: computeWindFromWave(spot.defaultForecast.sa) };
+                    dailyForecast[dateStr] = { wave: null, period: null, wind: computeWindFromWave(spot.defaultForecast.sa), direction: getWindDirectionForSpot(spot, dayKey) };
                     return;
                 }
 
@@ -322,7 +352,8 @@
                 dailyForecast[dateStr] = {
                     wave: Number.isFinite(wave) ? wave : null,
                     period: Number.isFinite(period) ? period : null,
-                    wind: computeWindFromWave(Number.isFinite(wave) ? wave : spot.defaultForecast.sa)
+                    wind: computeWindFromWave(Number.isFinite(wave) ? wave : spot.defaultForecast.sa),
+                    direction: getWindDirectionForSpot(spot, dayKey)
                 };
             });
 
@@ -344,13 +375,13 @@
                     const saDate = dates.sa;
                     liveForecastCache[spot.id] = {
                         source: 'live',
-                        [saDate]: dailyForecast[saDate] || { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p, wind: computeWindFromWave(spot.defaultForecast.sa) },
+                        [saDate]: dailyForecast[saDate] || { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p, wind: computeWindFromWave(spot.defaultForecast.sa), direction: getWindDirectionForSpot(spot, 'sa') },
                         ...Object.fromEntries(Object.entries(dailyForecast).map(([dateKey, value]) => [dateKey, value]))
                     };
                 } catch (error) {
                     liveForecastCache[spot.id] = {
                         source: 'fallback',
-                        [dates.sa]: { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p, wind: computeWindFromWave(spot.defaultForecast.sa) }
+                        [dates.sa]: { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p, wind: computeWindFromWave(spot.defaultForecast.sa), direction: getWindDirectionForSpot(spot, 'sa') }
                     };
                 }
             }));
@@ -475,7 +506,7 @@
             } catch (error) {
                 liveForecastCache[spot.id] = {
                     source: 'fallback',
-                    [dates.sa]: { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p, wind: computeWindFromWave(spot.defaultForecast.sa) }
+                    [dates.sa]: { wave: spot.defaultForecast.sa, period: spot.defaultForecast.p, wind: computeWindFromWave(spot.defaultForecast.sa), direction: getWindDirectionForSpot(spot, 'sa') }
                 };
                 return liveForecastCache[spot.id];
             }
@@ -517,12 +548,13 @@
                 sourceBadge.className = "text-[10px] font-bold px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800";
 
                 days.forEach(d => {
+                    const direction = getWindDirectionForSpot(spot, d);
                     let factor = d === "sa" ? 1.0 : (d === "fr" ? 0.9 : 0.85);
                     let h = (parseFloat(spot.defaultForecast.sa) * factor).toFixed(1);
                     const windValue = Math.round(computeWindFromWave(parseFloat(spot.defaultForecast.sa) * factor));
                     document.getElementById(`wave-${d}`).innerText = `${h}m`;
                     document.getElementById(`period-${d}`).innerText = `${spot.defaultForecast.p}s`;
-                    document.getElementById(`wind-${d}`).innerText = `${windValue}kt`;
+                    document.getElementById(`wind-${d}`).innerText = `${windValue}kt ${direction}`;
                 });
 
                 const dynamicScore = calculateDynamicScore(spot.defaultForecast.sa);
@@ -546,6 +578,7 @@
                 const waveValue = dayValue && dayValue.wave != null ? dayValue.wave : null;
                 const periodValue = dayValue && dayValue.period != null ? dayValue.period : spot.defaultForecast.p;
                 const windValue = dayValue && dayValue.wind != null ? dayValue.wind : computeWindFromWave(waveValue ?? spot.defaultForecast.sa);
+                const direction = dayValue && dayValue.direction ? dayValue.direction : getWindDirectionForSpot(spot, d);
 
                 if (waveValue != null) {
                     document.getElementById(`wave-${d}`).innerText = `${waveValue.toFixed(1)}m`;
@@ -555,7 +588,7 @@
                 }
 
                 document.getElementById(`period-${d}`).innerText = `${Math.round(periodValue)}s`;
-                document.getElementById(`wind-${d}`).innerText = `${Math.round(windValue)}kt`;
+                document.getElementById(`wind-${d}`).innerText = `${Math.round(windValue)}kt ${direction}`;
             });
 
             const dynamicScore = calculateDynamicScore(saWaveHeight);
